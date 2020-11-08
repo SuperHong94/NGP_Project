@@ -1,0 +1,2 @@
+effect0 ==jump
+effect1 ==Å¬¸¯À½
