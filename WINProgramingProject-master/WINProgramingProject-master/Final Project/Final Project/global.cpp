@@ -780,6 +780,14 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 		TransparentBlt(hDC, 0, 0, WindowSize.right, WindowSize.bottom, mDC, 0, 0, bit.bmWidth, bit.bmHeight, SRCCOPY);
 		DeleteDC(mDC);
 		return 0;
+	case SelectPlay:
+		mDC = CreateCompatibleDC(hDC);
+		hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_SELECTPLAY));
+		GetObject(hBit, sizeof(bit), &bit);
+		(HBITMAP)SelectObject(mDC, hBit);
+		TransparentBlt(hDC, 0, 0, WindowSize.right, WindowSize.bottom, mDC, 0, 0, bit.bmWidth, bit.bmHeight, SRCCOPY);
+		DeleteDC(mDC);
+		return 0;
 	case Select:
 		mDC = CreateCompatibleDC(hDC);
 		hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_SELECTSTAGE));
@@ -828,7 +836,7 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 	switch (eRound) {
 	case MAIN:
 		if ((x >= 190 && y >= 250) && (x <= 1000 && y <= 370))
-			eRound = Select;
+			eRound = SelectPlay;
 		if ((x >= 190 && y >= 400) && (x <= 1000 && y <= 525))
 			eRound = HELP;
 		if ((x >= 190 && y >= 555) && (x <= 1000 && y <= 680))
@@ -842,8 +850,19 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 			eRound = Round2;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
+			eRound = SelectPlay;
+		break;
+	case SelectPlay:
+		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
+			eRound = Select;
+		}
+		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
+			eRound = Select;
+		}
+		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
 			eRound = MAIN;
 		break;
+
 	}
 
 }

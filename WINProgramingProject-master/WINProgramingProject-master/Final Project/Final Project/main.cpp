@@ -117,6 +117,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case Select:
 			ClickRange(lParam, eRound);
 			break;
+		case SelectPlay:
+			ClickRange(lParam, eRound);
+			break;
 		case Round1:
 			break;
 		case Round2:
