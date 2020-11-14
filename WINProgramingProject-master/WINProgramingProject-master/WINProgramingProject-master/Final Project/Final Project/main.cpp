@@ -1,3 +1,5 @@
+#pragma comment(lib, "ws2_32")
+
 #include "global.h"
 
 HINSTANCE g_hInst;
@@ -6,6 +8,24 @@ LPCTSTR lpszWindowName = L"Window Programming Lab";
 LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 EROUND eRound = MAIN;
 bool PauseOnOff = true;
+using namespace std;
+
+#define SERVERIP "127.0.0.1"
+#define SERVERPORT 9000
+#define BUFSIZE 25
+
+vector<int> v;
+int acceptClientCnt = 0;
+int clientCnt = 0;
+
+// 오류 출력 함수
+void err_quit(char* msg);
+void err_display(char* msg);
+
+// 소켓 통신 스레드 함수
+DWORD WINAPI ServerMain(LPVOID arg);
+DWORD WINAPI ProcessClient(LPVOID arg);
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -69,6 +89,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		head->nextBoom = NULL;
 		GetClientRect(hWnd, &WindowSize);
 		GetClientRect(hWnd, &Energybar);
+		GetClientRect(hWnd, &Energybar2);
 		tmp.left = 0;
 		tmp.right = 0;
 		tmp.top = 0;
@@ -123,6 +144,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case YouDie:
 			Energybar.right = WindowSize.right;
+			Energybar2.right = WindowSize.right;
 			playSound(MainSound);
 			eRound = MAIN;
 
@@ -130,6 +152,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case YouWin:
 			eRound = MAIN;
 			Energybar.right = WindowSize.right;
+			Energybar2.right = WindowSize.right;
 			playSound(MainSound);
 			break;
 		default:
@@ -308,6 +331,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				break;
 			case 1:  //0.1초 단위로 생성됨
 				sj_Timer++;
+				if (Energybar.right <= 0) {
+					eRound = YouDie;
+					KillTimer(hWnd, 1);
+					playSound(YOUDIE);
+					menuOnOff = true;
+					SetUp(head, bullet_head);
+		
+				}
 				if (Energybar.right <= 0) {
 					eRound = YouDie;
 					KillTimer(hWnd, 1);
@@ -1009,6 +1040,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			Animation(hDC, g_hInst, head, bullet_head);
 			//SelectObject(hDC, oldBackBit);
 			DrawEnergybar(hDC, g_hInst, eRound);
+			DrawEnergybar2(hDC, g_hInst, eRound);
 			GetClientRect(hWnd, &WindowSize);
 
 		}
@@ -1035,4 +1067,36 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	}
 	return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
+
+void err_quit(char* msg)
+{
+	LPVOID lpmsgBuf;
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpmsgBuf, 0, NULL);
+	wchar_t* w_str;
+	int len = (int)strlen(msg) + 1;
+	mbstowcs(w_str, msg, len);
+
+
+	MessageBox(NULL, (LPCWSTR)lpmsgBuf, w_str, MB_ICONERROR);
+	LocalFree(lpmsgBuf);
+	exit(1);
+}
+
+void err_display(char* msg)
+{
+	LPVOID lpMsgBuf;
+	FormatMessage(
+		FORMAT_MESSAGE_ALLOCATE_BUFFER |
+		FORMAT_MESSAGE_FROM_SYSTEM,
+		NULL, WSAGetLastError(),
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		(LPTSTR)&lpMsgBuf, 0, NULL);
+	printf("[%s] %s", msg, (LPCTSTR)lpMsgBuf);
+	LocalFree(lpMsgBuf);
 }

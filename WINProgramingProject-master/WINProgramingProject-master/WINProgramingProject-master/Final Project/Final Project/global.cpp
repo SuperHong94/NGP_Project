@@ -5,6 +5,7 @@ RECT Player_1;
 RECT Player_2;
 RECT WindowSize;
 RECT Energybar;
+RECT Energybar2;
 HBITMAP Laser_Boom;
 HBITMAP Circle_Boom;
 HBITMAP Teleport;
@@ -713,6 +714,29 @@ void DrawEnergybar(HDC hDC, HINSTANCE hInst, EROUND& eRound)
 
 }
 
+void DrawEnergybar2(HDC hDC, HINSTANCE hInst, EROUND& eRound)
+{
+	HDC mDC;
+	BITMAP bit;
+	HBITMAP hBit;
+	HBRUSH hBrush, hBrush1;
+	//BLENDFUNCTION m_BlendFuntion; //불투명;
+	//m_BlendFuntion.BlendOp = AC_SRC_OVER;  //블렌딩 옵션_ACSRCC_OVER는 혼합옵션
+	//m_BlendFuntion.AlphaFormat = 0;
+	//m_BlendFuntion.AlphaFormat = 0;
+	//m_BlendFuntion.SourceConstantAlpha = 150; //0은 완전 투명  255는 완전 불투명)
+	hBrush = CreateSolidBrush(RGB(100, 100, 100));
+	hBrush1 = CreateSolidBrush(RGB(0, 0, 100));
+	(HBRUSH)SelectObject(hDC, hBrush);
+	Rectangle(hDC, WindowSize.left, WindowSize.bottom - 40, WindowSize.right, WindowSize.bottom-20);
+	(HBRUSH)SelectObject(hDC, hBrush1);
+	Rectangle(hDC, Energybar2.left, Energybar2.bottom - 40, Energybar2.right, Energybar2.bottom-20);
+
+	DeleteObject(hBrush);
+	DeleteObject(hBrush1);
+
+}
+
 void CheckBulletCrush(Boom* head)
 {
 	Boom* p;
@@ -727,7 +751,7 @@ void CheckBulletCrush(Boom* head)
 		}
 		if (PLAYER2_HIT == 0 && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
 		{
-			Energybar.right -= 200;
+			Energybar2.right -= 200;
 			PLAYER2_HIT = 50;
 			effPlaySound(Damage);
 		}
@@ -748,7 +772,7 @@ void CheckBoomCrush(Boom* head)
 		}
 		if ((PLAYER2_HIT == 0) && (p->nextBoom->boomAnimaition >= 100) && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
 		{
-			Energybar.right -= 200;
+			Energybar2.right -= 200;
 			PLAYER2_HIT = 50;
 			effPlaySound(Damage);
 		}

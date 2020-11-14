@@ -1,7 +1,18 @@
 #pragma once
+
+#include <winsock2.h>
+
 #include <Windows.h>
+#include <windows.h>
 #include <iostream>
 #include <math.h>
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string>
+#include <commctrl.h>
+
+#include <vector>
 #include "SoundManager.h"
 #include "resource.h"
 
@@ -12,6 +23,7 @@ extern RECT Player_1;
 extern RECT Player_2;
 extern RECT WindowSize;
 extern RECT Energybar;
+extern RECT Energybar2;
 extern HBITMAP Laser_Boom;
 extern HBITMAP Circle_Boom;
 extern HBITMAP Teleport;
@@ -119,6 +131,7 @@ void DrawDie(RECT*);
 void Doughnut(HDC hDC, Boom* head, int x, int y, int width);
 bool OutOfRange(Boom* boom);
 void DrawEnergybar(HDC hDC, HINSTANCE hInstance, EROUND&);
+void DrawEnergybar2(HDC hDC, HINSTANCE hInstance, EROUND&);
 void CheckBulletCrush(Boom* head);
 void CheckBoomCrush(Boom* head);
 int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst);
