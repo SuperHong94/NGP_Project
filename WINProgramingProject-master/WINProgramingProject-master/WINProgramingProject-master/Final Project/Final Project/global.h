@@ -37,6 +37,27 @@ extern RECT tmp;
 extern RECT tmp2;
 extern int score;
 
+typedef struct udpdata
+{
+	char playerID;
+	int playerXpos;
+	int playerYpos;
+	int collisionDamage;
+	EROUND sceneState;
+
+}udpData;
+
+typedef struct tcpdata
+{
+	char playerID;
+	bool useTeleport;
+	int teleportXpos;
+	int teleportYpos;
+	bool useDash;
+	int hp;
+}tcpData;
+
+
 enum PLAYERDIRECTION {
 	UP,
 	DOWN,
