@@ -37,18 +37,29 @@ extern RECT tmp;
 extern RECT tmp2;
 extern int score;
 
+enum EROUND {
+	Round1,
+	MAIN,
+	HELP,
+	Select,
+	Round2,
+	YouDie,
+	YouWin
+};
+
 typedef struct udpdata
 {
+	char type;
 	char playerID;
 	int playerXpos;
 	int playerYpos;
 	int collisionDamage;
 	EROUND sceneState;
-
 }udpData;
 
 typedef struct tcpdata
 {
+	char type;
 	char playerID;
 	bool useTeleport;
 	int teleportXpos;
@@ -74,15 +85,7 @@ extern PLAYERDIRECTION PLAYER1DR;
 extern PLAYERDIRECTION PLAYER2DR;
 
 
-enum EROUND {
-	Round1,
-	MAIN,
-	HELP,
-	Select,
-	Round2,
-	YouDie,
-	YouWin
-};
+
 enum ETURNN {
 	turn0 = 0,
 	turn1, turn2, turn3, turn4, turn5

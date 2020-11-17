@@ -23,8 +23,18 @@ void err_quit(char* msg);
 void err_display(char* msg);
 
 // 소켓 통신 스레드 함수
-DWORD WINAPI ServerMain(LPVOID arg);
-DWORD WINAPI ProcessClient(LPVOID arg);
+int CreateSocket();
+SOCKET UDPsock;
+SOCKET TCPsock;
+SOCKADDR_IN serveraddr;
+int sendTcpData();
+int sendUdpData();
+
+udpdata *player1UdpData;
+udpdata *player2UdpData;
+
+tcpdata *player2TcpData;
+tcpdata *player2TcpData;
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
@@ -1099,4 +1109,44 @@ void err_display(char* msg)
 		(LPTSTR)&lpMsgBuf, 0, NULL);
 	printf("[%s] %s", msg, (LPCTSTR)lpMsgBuf);
 	LocalFree(lpMsgBuf);
+}
+
+
+int CreateSocket()
+{
+	int retval;
+
+	WSADATA wsa;
+	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+		return 1;
+
+	// tcp socket()
+	TCPsock = socket(AF_INET, SOCK_STREAM, 0);
+	if (TCPsock == INVALID_SOCKET) err_quit((char *)"TCPsocket()");
+
+	// udp socket()
+	UDPsock = socket(AF_INET, SOCK_DGRAM, 0);
+	if (UDPsock == INVALID_SOCKET) err_quit((char *)"UDPsocket()");
+
+	// connect()
+	serveraddr;
+	ZeroMemory(&serveraddr, sizeof(serveraddr));
+	serveraddr.sin_family = AF_INET;
+	serveraddr.sin_addr.S_un.S_addr = inet_addr(SERVERIP);
+	serveraddr.sin_port = htons(SERVERPORT);
+	retval = connect(TCPsock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+	if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
+}
+
+int sendTcpData(tcpdata *playerData)
+{
+	int retval;
+	// 데이터 통신에 사용할 변수
+	char buf[BUFSIZE];
+	int readSize;
+	int sendDataSize = 0;
+
+	char *dataType;
+	dataType[0] = playerData->type;
+	retval = send(TCPsock, dataType, 1, 0);
 }
