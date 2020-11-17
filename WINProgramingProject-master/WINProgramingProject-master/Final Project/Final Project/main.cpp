@@ -114,12 +114,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case HELP:
 			eRound = MAIN;
 			break;
-		case Select:
-			ClickRange(lParam, eRound);
-			break;
 		case SelectPlay:
 			ClickRange(lParam, eRound);
 			break;
+		case Select:
+			ClickRange(lParam, eRound);
+			break;
+
 		case Round1:
 			break;
 		case Round2:
@@ -1016,7 +1017,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		}
 
-		
+
 
 		BitBlt(MemDC, 0, 0, WindowSize.right, WindowSize.bottom, hDC, 0, 0, SRCCOPY);
 
