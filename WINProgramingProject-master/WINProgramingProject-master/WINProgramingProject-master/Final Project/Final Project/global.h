@@ -49,8 +49,8 @@ enum EROUND {
 
 typedef struct udpdata
 {
-	char type;
-	char playerID;
+	char *type;
+	char *playerID;
 	int playerXpos;
 	int playerYpos;
 	int collisionDamage;
@@ -59,8 +59,8 @@ typedef struct udpdata
 
 typedef struct tcpdata
 {
-	char type;
-	char playerID;
+	char *type;
+	char *playerID;
 	bool useTeleport;
 	int teleportXpos;
 	int teleportYpos;

@@ -27,14 +27,13 @@ int CreateSocket();
 SOCKET UDPsock;
 SOCKET TCPsock;
 SOCKADDR_IN serveraddr;
-int sendTcpData();
-int sendUdpData();
+int sendTcpData(tcpData *playerData);
+int sendUdpData(udpData *playerData);
 
-udpdata *player1UdpData;
-udpdata *player2UdpData;
 
-tcpdata *player2TcpData;
-tcpdata *player2TcpData;
+udpData *playerUdpData = new udpData[1];
+tcpData *playerTcpData = new tcpData[1];
+
 
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
@@ -62,6 +61,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//윈도우 생성
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
+
+	playerTcpData[0] = { (char*)"1", (char*)"1" , false, 0, 0, false, 0 };
+
+	char type;
+	char playerID;
+	bool useTeleport;
+	int teleportXpos;
+	int teleportYpos;
+	bool useDash;
+	int hp;
+
+	CreateSocket();
+	sendTcpData( &playerTcpData[0]);
+	//sendUdpData();
+
 
 	//윈도우 출력
 	ShowWindow(hWnd, nCmdShow);
@@ -93,6 +107,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	//메시지 처리하기
 	switch (uMsg) {
 	case WM_CREATE:
+
 		head = new Boom;
 		bullet_head = new Boom;
 		bullet_head->nextBoom = NULL;
@@ -1146,7 +1161,31 @@ int sendTcpData(tcpdata *playerData)
 	int readSize;
 	int sendDataSize = 0;
 
-	char *dataType;
-	dataType[0] = playerData->type;
-	retval = send(TCPsock, dataType, 1, 0);
+	char dataType[256];
+	ZeroMemory(dataType, 256);
+	sprintf(dataType, playerData->type);
+
+	//cout << playerData->type << endl;
+	retval = send(TCPsock, dataType, sizeof(dataType), 0);
+
+	//retval = send(TCPsock, (char *)&playerData, sizeof(tcpData), 0);
+
+	return 0;
+}
+
+int sendUdpData(tcpdata *playerData)
+{
+	//int retval;
+	//// 데이터 통신에 사용할 변수
+	//char buf[BUFSIZE];
+	//int readSize;
+	//int sendDataSize = 0;
+
+	//char* dataType;
+	//dataType[0] = playerData->type;
+	//retval = send(UDPsock, dataType, 1, 0);
+
+	//retval = send(UDPsock, (char*)&playerData, sizeof(udpData), 0);
+
+	return 0;
 }
