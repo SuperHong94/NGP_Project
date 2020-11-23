@@ -46,28 +46,30 @@ enum EROUND {
 	YouDie,
 	YouWin
 };
-
+#pragma pack(1)
 typedef struct udpdata
 {
-	char *type;
-	char *playerID;
-	int playerXpos;
-	int playerYpos;
-	int collisionDamage;
+	char type;
+	char playerID;
+	float playerXpos;
+	float playerYpos;
+	char collisionDamage;
 	EROUND sceneState;
 }udpData;
+#pragma pack()
 
+#pragma pack(1)
 typedef struct tcpdata
 {
-	char *type;
-	char *playerID;
+	char type;
+	char playerID;
 	bool useTeleport;
 	int teleportXpos;
 	int teleportYpos;
 	bool useDash;
-	int hp;
+	float hp;
 }tcpData;
-
+#pragma pack()
 
 enum PLAYERDIRECTION {
 	UP,

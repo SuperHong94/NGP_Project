@@ -1,5 +1,4 @@
 #pragma comment(lib, "ws2_32")
-
 #include "global.h"
 
 HINSTANCE g_hInst;
@@ -12,7 +11,7 @@ using namespace std;
 
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
-#define BUFSIZE 25
+#define BUFSIZE 5000
 
 vector<int> v;
 int acceptClientCnt = 0;
@@ -26,17 +25,20 @@ void err_display(char* msg);
 int CreateSocket();
 SOCKET UDPsock;
 SOCKET TCPsock;
-SOCKADDR_IN serveraddr;
-int sendTcpData(tcpData *playerData);
-int sendUdpData(udpData *playerData);
+SOCKADDR_IN serveraddr, serveraddr2;
+int sendTcpData(tcpData playerData);
+int sendUdpData(udpData playerData);
 
 
-udpData *p1UdpData = new udpData[1];
-tcpData *p1TcpData = new tcpData[1];
-udpData* p2UdpData = new udpData[1];
-tcpData* p2TcpData = new tcpData[1];
+//udpData *p1UdpData = new udpData[1];
+//tcpData *p1TcpData = new tcpData[1];
+//udpData* p2UdpData = new udpData[1];
+//tcpData* p2TcpData = new tcpData[1];
 
-
+udpData p1UdpData;
+tcpData p1TcpData;
+udpData p2UdpData;
+tcpData p2TcpData;
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdParam, int nCmdShow)
 {
@@ -64,11 +66,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//윈도우 생성
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
 
-	p1UdpData[0] = { (char*)"u", (char*)"1" , 0, 0, 0, EROUND::MAIN };
-	p1TcpData[0] = { (char*)"t", (char*)"1" , false, 0, 0, false, 100 };
+	p1UdpData = { 'u', '1' , 0, 0, 0, EROUND::MAIN };
+	p1TcpData = { 't', '1' , false, '0', '0',false, 100 };
 
-	p2UdpData[0] = { (char*)"u", (char*)"2" , 0, 0, 0, EROUND::MAIN };
-	p2TcpData[0] = { (char*)"c", (char*)"2" , false, 0, 0, false, 100 };
+
+	p2UdpData = { 'u', '2' , 0, 0, 0, EROUND::MAIN };
+	p2TcpData = { 't', '2' , false, '0', '0',false, 100 };
 
 	char type;
 	char playerID;
@@ -188,8 +191,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_TIMER:
-		sendTcpData(p2TcpData);
-		//sendTcpData(p2TcpData);
+		//sendTcpData(p1TcpData);
+		sendUdpData(p1UdpData);
 
 		if (PauseOnOff)
 		{
@@ -1157,43 +1160,42 @@ int CreateSocket()
 	serveraddr.sin_port = htons(SERVERPORT);
 	retval = connect(TCPsock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
+
 }
 
-int sendTcpData(tcpdata *playerData)
+int sendTcpData(tcpdata playerData)
 {
 	int retval;
 	// 데이터 통신에 사용할 변수
 	char buf[BUFSIZE];
-	int readSize;
 	int sendDataSize = sizeof(tcpData);
 
 	char data[256];
 	ZeroMemory(data, 256);
-	//sprintf(dataType, playerData->type);
-
-	//data = (char*)playerData;
 
 	// 구조체 크기 전송
 	retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
 
-	retval = send(TCPsock, (char *)&playerData, sendDataSize, 0);
+	retval = send(TCPsock, (char *)&playerData, sizeof(playerData), 0);
 
 	return 0;
 }
 
-int sendUdpData(tcpdata *playerData)
+int sendUdpData(udpdata playerData)
 {
-	//int retval;
-	//// 데이터 통신에 사용할 변수
-	//char buf[BUFSIZE];
-	//int readSize;
-	//int sendDataSize = 0;
+	int retval;
+	// 데이터 통신에 사용할 변수
+	char buf[BUFSIZE];
+	int sendDataSize = sizeof(udpData);
 
-	//char* dataType;
-	//dataType[0] = playerData->type;
-	//retval = send(UDPsock, dataType, 1, 0);
+	char data[256];
+	ZeroMemory(data, 256);
 
-	//retval = send(UDPsock, (char*)&playerData, sizeof(udpData), 0);
+	// 구조체 크기 전송
+	//retval = sendto(TCPsock, (char*)&sendDataSize, sizeof(int), 0,
+	//	(SOCKADDR *)&serveraddr, sizeof(serveraddr));
 
+	retval = sendto(UDPsock, (char*)&playerData, sizeof(playerData), 0,
+		(SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	return 0;
 }
