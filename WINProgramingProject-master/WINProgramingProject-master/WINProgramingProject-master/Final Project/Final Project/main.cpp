@@ -31,8 +31,10 @@ int sendTcpData(tcpData *playerData);
 int sendUdpData(udpData *playerData);
 
 
-udpData *playerUdpData = new udpData[1];
-tcpData *playerTcpData = new tcpData[1];
+udpData *p1UdpData = new udpData[1];
+tcpData *p1TcpData = new tcpData[1];
+udpData* p2UdpData = new udpData[1];
+tcpData* p2TcpData = new tcpData[1];
 
 
 
@@ -62,7 +64,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//윈도우 생성
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
 
-	playerTcpData[0] = { (char*)"1", (char*)"1" , false, 0, 0, false, 0 };
+	p1UdpData[0] = { (char*)"u", (char*)"1" , 0, 0, 0, EROUND::MAIN };
+	p1TcpData[0] = { (char*)"t", (char*)"1" , false, 0, 0, false, 100 };
+
+	p2UdpData[0] = { (char*)"u", (char*)"2" , 0, 0, 0, EROUND::MAIN };
+	p2TcpData[0] = { (char*)"c", (char*)"2" , false, 0, 0, false, 100 };
 
 	char type;
 	char playerID;
@@ -73,9 +79,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	int hp;
 
 	CreateSocket();
-	sendTcpData( &playerTcpData[0]);
-	//sendUdpData();
-
 
 	//윈도우 출력
 	ShowWindow(hWnd, nCmdShow);
@@ -185,6 +188,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_TIMER:
+		sendTcpData(p2TcpData);
+		//sendTcpData(p2TcpData);
+
 		if (PauseOnOff)
 		{
 			switch (wParam) {
@@ -1159,16 +1165,18 @@ int sendTcpData(tcpdata *playerData)
 	// 데이터 통신에 사용할 변수
 	char buf[BUFSIZE];
 	int readSize;
-	int sendDataSize = 0;
+	int sendDataSize = sizeof(tcpData);
 
-	char dataType[256];
-	ZeroMemory(dataType, 256);
-	sprintf(dataType, playerData->type);
+	char data[256];
+	ZeroMemory(data, 256);
+	//sprintf(dataType, playerData->type);
 
-	//cout << playerData->type << endl;
-	retval = send(TCPsock, dataType, sizeof(dataType), 0);
+	//data = (char*)playerData;
 
-	//retval = send(TCPsock, (char *)&playerData, sizeof(tcpData), 0);
+	// 구조체 크기 전송
+	retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
+
+	retval = send(TCPsock, (char *)&playerData, sendDataSize, 0);
 
 	return 0;
 }
