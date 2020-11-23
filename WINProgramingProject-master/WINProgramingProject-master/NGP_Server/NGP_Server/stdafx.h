@@ -25,19 +25,22 @@ enum EROUND {
 	SelectPlay
 };
 
+#pragma pack(1)
 typedef struct udpdata
 {
-	char type;
+	char type;  //u면 udp데이터
 	char playerID;
 	int playerXpos;
 	int playerYpos;
 	int collisionDamage;
 	EROUND sceneState;
 }udpData;
+#pragma pack()
 
+#pragma pack(1)
 typedef struct tcpdata
 {
-	char type;
+	char type; 
 	char playerID;
 	bool useTeleport;
 	int teleportXpos;
@@ -45,3 +48,4 @@ typedef struct tcpdata
 	bool useDash;
 	int hp;
 }tcpData;
+#pragma pack()

@@ -59,7 +59,6 @@ int recvf(SOCKET s, char* fname, char* buf, int len, int flags)
 	int left = len;
 	int remain = 0;
 	int percent = len;
-	g_pers[index] = ' ';
 	while (left > 0) {
 		received = recv(s, ptr, 10, flags);
 

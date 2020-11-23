@@ -13,4 +13,5 @@ int recvf(SOCKET s, char* fname, char* buf, int len, int flags);
 void UpdateServer();
 
 
-DWORD WINAPI ProcessClient(LPVOID arg);
+
+extern int g_clientCnt;

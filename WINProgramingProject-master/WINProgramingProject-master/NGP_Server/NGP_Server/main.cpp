@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
 	int addrlen;
 	HANDLE hThread;
 
+
 	while (1) {
 		// accept()
 		addrlen = sizeof(clientaddr);

@@ -7,16 +7,28 @@ class CTCPsocket
 	SOCKET m_client_sock;
 	SOCKADDR_IN m_clientaddr;
 
-
+	CPlayer* m_pPlayer1;
+	CPlayer* m_pPlayer2;
 public:
 
 	/// <summary>
 	/// 대기소켓 만들고 bind(), listen()까지 한다.
 	/// </summary>
 	CTCPsocket();
+	CTCPsocket(CPlayer* p1, CPlayer* p2);
 	virtual ~CTCPsocket();
 
 	void TCPcommunications();
+	SOCKET GetListenSock();
+	SOCKET GetClientSock();
+
+	SOCKADDR_IN GetServeraddr();
+	SOCKADDR_IN GetClientaddr();
+
+	void TcpSendData(int index, SOCKET socket);
+
+	void TcpRecvData(int index, SOCKET socket);
 };
 
-DWORD WINAPI ProcessClient(LPVOID arg);
+DWORD WINAPI ProcessClient(CTCPsocket* arg);
+

@@ -32,6 +32,7 @@ C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgra
 C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\main.cpp(764,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\main.cpp(767,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
 C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\main.cpp(767,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  SoundManager.cpp
   코드를 생성하고 있습니다...
 C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\global.cpp(833): warning C4715: 'DrawMenu': 모든 제어 경로에서 값을 반환하지는 않습니다.
   Final Project.vcxproj -> C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Debug\Final Project.exe
