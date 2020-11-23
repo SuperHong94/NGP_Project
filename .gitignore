@@ -29,3 +29,7 @@
 *.exe
 *.out
 *.app
+
+*db
+
+ipch/
