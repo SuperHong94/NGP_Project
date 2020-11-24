@@ -1,15 +1,16 @@
 #include "stdafx.h"
+#include "CTCPsocket.h"
 #include "Utility.h"
-
+#include "CPlayer.h"
 
 
 int g_clientCnt = 0;
-string g_pers[BUFSIZE];
 // 소켓 함수 오류 출력 후 종료
 
 
 
-
+CPlayer player1;
+CPlayer player2;
 
 
 
@@ -22,27 +23,15 @@ int main(int argc, char* argv[])
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 		return 1;
 
-	// socket()  tcp 소켓
-	SOCKET listen_sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (listen_sock == INVALID_SOCKET) err_quit("socket()");
+	// socket()  tcp 소켓, bind, listen 까지 함
+	
+	CTCPsocket tcpSocket=CTCPsocket(&player1,&player2);
 
 
 	SOCKET udp_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (udp_sock == INVALID_SOCKET) err_quit("socket()");
 
 
-	// bind()
-	SOCKADDR_IN serveraddr;
-	ZeroMemory(&serveraddr, sizeof(serveraddr));
-	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serveraddr.sin_port = htons(SERVERPORT);
-	retval = bind(listen_sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit("bind()");
-
-	// listen()
-	retval = listen(listen_sock, SOMAXCONN);
-	if (retval == SOCKET_ERROR) err_quit("listen()");
 
 	// 데이터 통신에 사용할 변수
 	SOCKET client_sock;
@@ -53,8 +42,9 @@ int main(int argc, char* argv[])
 
 	while (1) {
 		// accept()
-		addrlen = sizeof(clientaddr);
-		client_sock = accept(listen_sock, (SOCKADDR*)&clientaddr, &addrlen);
+		addrlen = sizeof(tcpSocket.GetClientaddr());
+		clientaddr = tcpSocket.GetClientaddr();
+		client_sock = tcpSocket.TCPAccept();
 		if (client_sock == INVALID_SOCKET) {
 			err_display("accept()");
 			break;
@@ -66,13 +56,10 @@ int main(int argc, char* argv[])
 
 		// 스레드 생성
 		hThread = CreateThread(NULL, 0, ProcessClient,
-			(LPVOID)client_sock, 0, NULL);
+			(LPVOID)&tcpSocket, 0, NULL);
 		if (hThread == NULL) { closesocket(client_sock); }
 		else { CloseHandle(hThread); }
 	}
-
-	// closesocket()
-	closesocket(listen_sock);
 
 	// 윈속 종료
 	WSACleanup();

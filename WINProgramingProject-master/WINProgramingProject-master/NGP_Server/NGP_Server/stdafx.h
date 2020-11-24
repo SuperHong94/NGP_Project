@@ -35,9 +35,7 @@ typedef struct udpdata
 	int collisionDamage;
 	EROUND sceneState;
 }udpData;
-#pragma pack()
 
-#pragma pack(1)
 typedef struct tcpdata
 {
 	char type; 

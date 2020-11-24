@@ -1,15 +1,15 @@
 #pragma once
 
-struct POINT
+struct myPOINT
 {
 	int x; int y;
 };
 
 class CPlayer
 {
-	POINT m_pos;
+	myPOINT m_pos;
 	bool m_useTeleport;
-	POINT m_telePos;
+	myPOINT m_telePos;
 	bool m_useDash;
 	int m_hp;
 public:
@@ -17,8 +17,14 @@ public:
 	virtual ~CPlayer();
 
 	bool GetUseTeleport();
-	POINT GetTelePos();
+	myPOINT GetTelePos();
 	bool GetuseDash();
 	int GetHp();
+
+	void SetPos(myPOINT pos);
+	void SetUseTeleport(bool tele);
+	void SetTelePos(myPOINT pos);
+	void SetDash(bool dash);
+	void SetHP(int hp); 
 };
 

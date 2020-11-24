@@ -70,20 +70,29 @@ SOCKADDR_IN CTCPsocket::GetServeraddr()
 
 SOCKADDR_IN CTCPsocket::GetClientaddr()
 {
+	cout << &m_clientaddr << endl;
 	return m_clientaddr;
+}
+
+SOCKET CTCPsocket::TCPAccept()
+{
+	int addrlen = sizeof(m_clientaddr);
+	m_client_sock = accept(m_listen_sock, (SOCKADDR*)&m_clientaddr, &addrlen);
+	return m_client_sock;
 }
 
 void CTCPsocket::TcpSendData(int index,SOCKET sock)
 {
 	//Player 1에게는 Player 2정보를 보낸다.
 	tcpdata tcpData;
+	//ZeroMemory(&tcpData, 0);
 	switch (index)
 	{
 	case 1:
 		tcpData.type = 't';
 		tcpData.playerID = '2';
 		tcpData.useTeleport = m_pPlayer2->GetUseTeleport();
-		tcpData.teleportXpos = m_pPlayer2->GetTelePos().x;
+		tcpData.teleportXpos = m_pPlayer2->GetTelePos().x+10;
 		tcpData.teleportYpos = m_pPlayer2->GetTelePos().y;
 		tcpData.useDash = m_pPlayer2->GetuseDash();
 		tcpData.hp = m_pPlayer2->GetHp();
@@ -103,7 +112,9 @@ void CTCPsocket::TcpSendData(int index,SOCKET sock)
 	}
 
 	int size = sizeof(tcpdata);
-	int retval = send(sock, (char*)&tcpData, sizeof(tcpdata), 0);
+	int retval = send(sock, (char*)&tcpData, size, 0);
+
+	std::cout<<"보내야 되는 데이터량: "<<size<<" 보낸 데이터량"<<retval<<' ' << tcpData.playerID << "의 telX:" << tcpData.teleportXpos << "를 보냅니다.\n";
 	if (retval == SOCKET_ERROR) {
 		err_display("sendtcp()");
 		return ;
@@ -113,18 +124,50 @@ void CTCPsocket::TcpSendData(int index,SOCKET sock)
 	
 }
 
-void CTCPsocket::TcpRecvData(int index, SOCKET socket)
+void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 {
+
+	tcpdata* tcpData;
+	char buffer[512];
+	myPOINT telPos;
+
+
+	cout << "데이터를 받습니다.\n";
+
+	int retval = recv(sock, buffer,512-1 , 0);
+	//index가 1이면 플레이어1이 보낸정보이다.
+	buffer[retval] = '\0';
+
+	tcpData = (tcpdata*)buffer;
+	
+	std::cout <<"받은데이터량:  "<<retval<<' '<< tcpData->playerID << "에서 받은 데이터: " << tcpData->teleportXpos << endl;
+	switch (index)
+	{
+	case 1:
+		m_pPlayer1->SetUseTeleport(tcpData->useTeleport);
+		telPos.x = tcpData->teleportXpos;
+		telPos.y = tcpData->teleportYpos;
+		m_pPlayer1->SetTelePos(telPos);
+		break;
+	case 2:
+		m_pPlayer2->SetUseTeleport(tcpData->useTeleport);
+		telPos.x = tcpData->teleportXpos;
+		telPos.y = tcpData->teleportYpos;
+		m_pPlayer2->SetTelePos(telPos);
+		break;
+	default:
+		break;
+	}
 }
 
 
 
 // 클라이언트와 데이터 통신 tcp
-DWORD WINAPI ProcessClient(CTCPsocket* arg)
+DWORD WINAPI ProcessClient(LPVOID arg)
 {
 	g_clientCnt++;
 	int index = g_clientCnt;
-	CTCPsocket* tcpSocket = arg;
+	CTCPsocket* tcpSocket = (CTCPsocket*)arg;
 	SOCKADDR_IN clientaddr= tcpSocket->GetClientaddr();
 	int addrlen = sizeof(clientaddr);
 	//클라이언트 정보 얻기
@@ -132,7 +175,7 @@ DWORD WINAPI ProcessClient(CTCPsocket* arg)
 	while (1) {
 		tcpSocket->TcpSendData(index,tcpSocket->GetClientSock());
 		//동기화 이벤트로 udp에 넘기는 부분
-		tcpSocket->TcpRecvData();
+		tcpSocket->TcpRecvData(index,tcpSocket->GetClientSock());
 
 		//동기화 이벤트로 main에 
 
