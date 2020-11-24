@@ -51,8 +51,8 @@ typedef struct udpdata
 {
 	char type;
 	char playerID;
-	float playerXpos;
-	float playerYpos;
+	int playerXpos;
+	int playerYpos;
 	char collisionDamage;
 	EROUND sceneState;
 }udpData;
@@ -67,7 +67,7 @@ typedef struct tcpdata
 	int teleportXpos;
 	int teleportYpos;
 	bool useDash;
-	float hp;
+	int hp;
 }tcpData;
 #pragma pack()
 

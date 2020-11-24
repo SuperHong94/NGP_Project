@@ -9,6 +9,7 @@ EROUND eRound = MAIN;
 bool PauseOnOff = true;
 using namespace std;
 
+//#define SERVERIP "192.168.219.100"
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
 #define BUFSIZE 5000
@@ -25,10 +26,12 @@ void err_display(char* msg);
 int CreateSocket();
 SOCKET UDPsock;
 SOCKET TCPsock;
+
 SOCKADDR_IN serveraddr, serveraddr2;
 int sendTcpData(tcpData playerData);
 int sendUdpData(udpData playerData);
-
+tcpData* recvTcpData();
+udpData* recvUdpData();
 
 //udpData *p1UdpData = new udpData[1];
 //tcpData *p1TcpData = new tcpData[1];
@@ -65,13 +68,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 
 	//扩档快 积己
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
-
+	//int cnt = 0
+	//	1
 	p1UdpData = { 'u', '1' , 0, 0, 0, EROUND::MAIN };
-	p1TcpData = { 't', '1' , false, '0', '0',false, 100 };
+	p1TcpData = { 't', '1' , false, 0, 0,false, 100 };
 
 
 	p2UdpData = { 'u', '2' , 0, 0, 0, EROUND::MAIN };
-	p2TcpData = { 't', '2' , false, '0', '0',false, 100 };
+	p2TcpData = { 't', '2' , false, 0, 0,false, 100 };
 
 	char type;
 	char playerID;
@@ -192,7 +196,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_TIMER:
 		//sendTcpData(p1TcpData);
+		//recvTcpData();
 		sendUdpData(p1UdpData);
+		recvUdpData();
 
 		if (PauseOnOff)
 		{
@@ -1152,14 +1158,16 @@ int CreateSocket()
 	UDPsock = socket(AF_INET, SOCK_DGRAM, 0);
 	if (UDPsock == INVALID_SOCKET) err_quit((char *)"UDPsocket()");
 
-	// connect()
-	serveraddr;
+	//connect()
+	//serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
 	serveraddr.sin_family = AF_INET;
 	serveraddr.sin_addr.S_un.S_addr = inet_addr(SERVERIP);
 	serveraddr.sin_port = htons(SERVERPORT);
-	retval = connect(TCPsock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-	if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
+
+
+	//retval = connect(TCPsock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
+	//if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
 
 }
 
@@ -1174,7 +1182,7 @@ int sendTcpData(tcpdata playerData)
 	ZeroMemory(data, 256);
 
 	// 备炼眉 农扁 傈价
-	retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
+	//retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
 
 	retval = send(TCPsock, (char *)&playerData, sizeof(playerData), 0);
 
@@ -1198,4 +1206,36 @@ int sendUdpData(udpdata playerData)
 	retval = sendto(UDPsock, (char*)&playerData, sizeof(playerData), 0,
 		(SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	return 0;
+}
+
+tcpData* recvTcpData()
+{
+	int retval;
+	int getSize;
+	char buffer[500];
+
+	getSize = recv(TCPsock, buffer, sizeof(buffer) - 1, 0);
+	buffer[getSize] = '\0';
+
+	tcpdata *tData = (tcpdata*)buffer;
+
+	cout << tData->type << endl;
+	return tData;
+}
+
+udpData* recvUdpData()
+{
+	int addrlen = sizeof(serveraddr);
+	int retval;
+	int getSize;
+	char buffer[500];
+	
+	getSize = recvfrom(UDPsock, buffer, sizeof(buffer) - 1, 0,
+		(SOCKADDR*)&serveraddr, &addrlen);
+	buffer[getSize] = '\0';
+
+	udpData* uData = (udpData*)buffer;
+
+	cout << uData->type << endl;
+	return uData;
 }
