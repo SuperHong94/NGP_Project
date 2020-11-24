@@ -24,6 +24,7 @@ extern bool POWEROVERWHELMING;
 extern RECT tmp;
 extern RECT tmp2;
 extern int score;
+extern bool g_isMulti;
 
 enum PLAYERDIRECTION {
 	UP,
@@ -48,7 +49,8 @@ enum EROUND {
 	Select,
 	Round2,
 	YouDie,
-	YouWin
+	YouWin,
+	SelectPlay
 };
 enum ETURNN {
 	turn0 = 0,
