@@ -85,7 +85,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	bool useDash;
 	int hp;
 
-	CreateSocket();
+	//CreateSocket();
 
 	//윈도우 출력
 	ShowWindow(hWnd, nCmdShow);
@@ -170,6 +170,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case HELP:
 			eRound = MAIN;
 			break;
+		case SelectPlay:
+			ClickRange(lParam, eRound);
+			break;
 		case Select:
 			ClickRange(lParam, eRound);
 			break;
@@ -197,8 +200,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		//sendTcpData(p1TcpData);
 		//recvTcpData();
-		sendUdpData(p1UdpData);
-		recvUdpData();
+		//sendUdpData(p1UdpData);
+		//recvUdpData();
 
 		if (PauseOnOff)
 		{

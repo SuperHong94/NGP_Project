@@ -36,6 +36,8 @@ extern bool POWEROVERWHELMING;
 extern RECT tmp;
 extern RECT tmp2;
 extern int score;
+extern int score;
+extern bool g_isMulti;
 
 enum EROUND {
 	Round1,
@@ -44,7 +46,8 @@ enum EROUND {
 	Select,
 	Round2,
 	YouDie,
-	YouWin
+	YouWin,
+	SelectPlay,
 };
 #pragma pack(1)
 typedef struct udpdata

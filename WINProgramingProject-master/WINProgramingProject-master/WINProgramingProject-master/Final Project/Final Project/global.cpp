@@ -26,6 +26,8 @@ PLAYERDIRECTION PLAYER2DR;
 bool POWEROVERWHELMING;
 int score;
 
+bool g_isMulti = false;
+
 bool Crush(RECT* player, int LX, int LY, int RX, int RY) //충돌!!LY는 LeftY의 준말 plyaer하고 폭탄의 범위랑 충돌처리할꺼임  //충돌하면 true리턴
 {
 	int playerWidth = (player->bottom - player->top) / 2;  //높이구해서 2로 나눔 player중점좌표구할려고하는거임
@@ -663,30 +665,32 @@ void Animation(HDC hDC, HINSTANCE g_hInst, Boom* head, Boom* bullet_head)
 		StretchBlt(hDC, Player_1.left, Player_1.top, Player_1.right - Player_1.left, Player_1.bottom - Player_1.top, memDC, 0, 0, 50, 50, SRCCOPY);
 	}
 
-	if (PLAYER2_HIT > 0)
-	{
-		switch (PLAYER2_HIT % 2)
+	if (g_isMulti) {
+		if (PLAYER2_HIT > 0)
 		{
-		case 0:
-			hBrush = CreateSolidBrush(RGB(255, 0, 204));
-			oldBrush = (HBRUSH)SelectObject(hDC, hBrush);
-			Rectangle(hDC, Player_2.left, Player_2.top, Player_2.right, Player_2.bottom);
-			SelectObject(hDC, oldBrush);
-			DeleteObject(hBrush);
-			break;
-		case 1:
+			switch (PLAYER2_HIT % 2)
+			{
+			case 0:
+				hBrush = CreateSolidBrush(RGB(255, 0, 204));
+				oldBrush = (HBRUSH)SelectObject(hDC, hBrush);
+				Rectangle(hDC, Player_2.left, Player_2.top, Player_2.right, Player_2.bottom);
+				SelectObject(hDC, oldBrush);
+				DeleteObject(hBrush);
+				break;
+			case 1:
+				(HBITMAP)SelectObject(memDC, PLAYER_2);
+				StretchBlt(hDC, Player_2.left, Player_2.top, Player_2.right - Player_2.left, Player_2.bottom - Player_2.top, memDC, 0, 0, 50, 50, SRCCOPY);
+				break;
+			default:
+				break;
+			}
+			--PLAYER2_HIT;
+		}
+		else
+		{
 			(HBITMAP)SelectObject(memDC, PLAYER_2);
 			StretchBlt(hDC, Player_2.left, Player_2.top, Player_2.right - Player_2.left, Player_2.bottom - Player_2.top, memDC, 0, 0, 50, 50, SRCCOPY);
-			break;
-		default:
-			break;
 		}
-		--PLAYER2_HIT;
-	}
-	else
-	{
-		(HBITMAP)SelectObject(memDC, PLAYER_2);
-		StretchBlt(hDC, Player_2.left, Player_2.top, Player_2.right - Player_2.left, Player_2.bottom - Player_2.top, memDC, 0, 0, 50, 50, SRCCOPY);
 	}
 	DeleteDC(memDC);
 }
@@ -804,6 +808,14 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 		TransparentBlt(hDC, 0, 0, WindowSize.right, WindowSize.bottom, mDC, 0, 0, bit.bmWidth, bit.bmHeight, SRCCOPY);
 		DeleteDC(mDC);
 		return 0;
+	case SelectPlay:
+		mDC = CreateCompatibleDC(hDC);
+		hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_SELECTPLAY));
+		GetObject(hBit, sizeof(bit), &bit);
+		(HBITMAP)SelectObject(mDC, hBit);
+		TransparentBlt(hDC, 0, 0, WindowSize.right, WindowSize.bottom, mDC, 0, 0, bit.bmWidth, bit.bmHeight, SRCCOPY);
+		DeleteDC(mDC);
+		return 0;
 	case Select:
 		mDC = CreateCompatibleDC(hDC);
 		hBit = LoadBitmap(hInst, MAKEINTRESOURCE(IDB_SELECTSTAGE));
@@ -852,11 +864,23 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 	switch (eRound) {
 	case MAIN:
 		if ((x >= 190 && y >= 250) && (x <= 1000 && y <= 370))
-			eRound = Select;
+			eRound = SelectPlay;
 		if ((x >= 190 && y >= 400) && (x <= 1000 && y <= 525))
 			eRound = HELP;
 		if ((x >= 190 && y >= 555) && (x <= 1000 && y <= 680))
 			PostQuitMessage(0);
+		break;
+	case SelectPlay:
+		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
+			g_isMulti = false;
+			eRound = Select;
+		}
+		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
+			g_isMulti = true;
+			eRound = Select;
+		}
+		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
+			eRound = MAIN;
 		break;
 	case Select:
 		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
@@ -866,7 +890,7 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 			eRound = Round2;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
-			eRound = MAIN;
+			eRound = SelectPlay;
 		break;
 	}
 
