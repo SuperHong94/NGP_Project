@@ -7,7 +7,8 @@
 #include <iostream>
 #include "CPlayer.h"
 
-#define SERVERIP "127.0.0.1"
+//#define SERVERIP "127.0.0.1"
+#define SERVERIP "192.168.219.100"
 #define SERVERPORT 9000
 #define BUFSIZE 1200
 
@@ -108,26 +109,29 @@ int main(int argc, char* argv[])
 	while (1) {
 		char buffer[BUFSIZ];
 		TCPDATA* tcpData;
-		myPOINT telPos;// telPo¤¤
+		myPOINT telPos;// 
 		int id = 0;
 
-		cout << "µ¥ÀÌÅÍ¸¦ ¹Þ½À´Ï´Ù.\n";
+		
 		retval = recv(sock, buffer, BUFSIZ-1, 0);
-
+		cout << "µ¥ÀÌÅÍ¸¦ ¹Þ½À´Ï´Ù.\n";
+		cout << "main xÁÂÇ¥" << mainPlayer.GetTelePos().x << '\n';
+		cout << "other xÁÂÇ¥" << otherPlayer.GetTelePos().x << '\n';
+	
 		buffer[retval] = '\0';
 		tcpData = (TCPDATA*)buffer;
 		otherPlayer.SetUseTeleport(tcpData->useTeleport);
 		telPos.x = tcpData->teleportXpos;
 		telPos.y = tcpData->teleportYpos;
 		otherPlayer.SetTelePos(telPos);
-		cout << "main xÁÂÇ¥" << mainPlayer.GetTelePos().x << '\n';
-		cout << "other xÁÂÇ¥" << otherPlayer.GetTelePos().x << '\n';
-
-		id = tcpData->playerID;
 		myPOINT t;
 		t.y = 0;
 		cout << "°»½ÅÇÒ mainÀÇ xÁÂÇ¥ ÀÔ·Â\n";
 		cin >> t.x;
+		
+
+		id = tcpData->playerID;
+		
 		if (t.x == 0)
 			break;
 		mainPlayer.SetTelePos(t);

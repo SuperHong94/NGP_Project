@@ -1,0 +1,6 @@
+﻿  global.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\SoundManager.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'fmod.hpp': No such file or directory
+  main.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\SoundManager.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'fmod.hpp': No such file or directory
+  SoundManager.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\Final Project\Final Project\SoundManager.h(4,10): fatal error C1083: 포함 파일을 열 수 없습니다. 'fmod.hpp': No such file or directory

@@ -70,7 +70,6 @@ SOCKADDR_IN CTCPsocket::GetServeraddr()
 
 SOCKADDR_IN CTCPsocket::GetClientaddr()
 {
-	cout << &m_clientaddr << endl;
 	return m_clientaddr;
 }
 
@@ -92,7 +91,7 @@ void CTCPsocket::TcpSendData(int index,SOCKET sock)
 		tcpData.type = 't';
 		tcpData.playerID = '2';
 		tcpData.useTeleport = m_pPlayer2->GetUseTeleport();
-		tcpData.teleportXpos = m_pPlayer2->GetTelePos().x+10;
+		tcpData.teleportXpos = m_pPlayer2->GetTelePos().x;
 		tcpData.teleportYpos = m_pPlayer2->GetTelePos().y;
 		tcpData.useDash = m_pPlayer2->GetuseDash();
 		tcpData.hp = m_pPlayer2->GetHp();
@@ -168,14 +167,18 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	g_clientCnt++;
 	int index = g_clientCnt;
 	CTCPsocket* tcpSocket = (CTCPsocket*)arg;
+	SOCKET client_sock = tcpSocket->GetClientSock();
 	SOCKADDR_IN clientaddr= tcpSocket->GetClientaddr();
 	int addrlen = sizeof(clientaddr);
 	//클라이언트 정보 얻기
-	getpeername(tcpSocket->GetClientSock(), (SOCKADDR*)&clientaddr, &addrlen);
+	getpeername(client_sock, (SOCKADDR*)&clientaddr, &addrlen);
 	while (1) {
-		tcpSocket->TcpSendData(index,tcpSocket->GetClientSock());
+		tcpSocket->TcpSendData(index, client_sock);
 		//동기화 이벤트로 udp에 넘기는 부분
-		tcpSocket->TcpRecvData(index,tcpSocket->GetClientSock());
+
+
+
+		tcpSocket->TcpRecvData(index, client_sock);
 
 		//동기화 이벤트로 main에 
 

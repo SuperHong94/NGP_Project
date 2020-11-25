@@ -1,3 +1,3 @@
 ﻿  소스.cpp
-C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\dummyClient\소스.cpp(102,31): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
-  dummyClient.vcxproj -> C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\Debug\dummyClient.exe
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\dummyClient\소스.cpp(103,31): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+LINK : fatal error LNK1168: C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\Debug\dummyClient.exe을(를) 쓰기용으로 열 수 없습니다.
