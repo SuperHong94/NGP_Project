@@ -857,8 +857,9 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 	}
 }
 
-void ClickRange(LPARAM lParam, EROUND& eRound)
+int ClickRange(LPARAM lParam, EROUND& eRound)
 {
+	int state = 0;
 	int x = LOWORD(lParam);
 	int y = HIWORD(lParam);
 	switch (eRound) {
@@ -873,10 +874,12 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 	case SelectPlay:
 		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
 			g_isMulti = false;
+			state = 0;
 			eRound = Select;
 		}
 		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
 			g_isMulti = true;
+			state = 1;
 			eRound = Select;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
@@ -893,7 +896,7 @@ void ClickRange(LPARAM lParam, EROUND& eRound)
 			eRound = SelectPlay;
 		break;
 	}
-
+	return state;
 }
 
 void MeetBoom(HDC hDC, Boom* head)

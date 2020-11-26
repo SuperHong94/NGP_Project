@@ -9,8 +9,8 @@ EROUND eRound = MAIN;
 bool PauseOnOff = true;
 using namespace std;
 
-//#define SERVERIP "192.168.219.100"
-#define SERVERIP "127.0.0.1"
+#define SERVERIP "192.168.219.100"
+//#define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
 #define BUFSIZE 5000
 
@@ -27,12 +27,14 @@ int CreateSocket();
 SOCKET UDPsock;
 SOCKET TCPsock;
 
-SOCKADDR_IN serveraddr, serveraddr2;
+int multiStart = 0;
+bool multiOn = false;
+SOCKADDR_IN Tserveraddr, Userveraddr;
 int sendTcpData(tcpData playerData);
 int sendUdpData(udpData playerData);
 tcpData* recvTcpData();
 udpData* recvUdpData();
-
+void UpdateData();
 //udpData *p1UdpData = new udpData[1];
 //tcpData *p1TcpData = new tcpData[1];
 //udpData* p2UdpData = new udpData[1];
@@ -70,11 +72,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
 	//int cnt = 0
 	//	1
-	p1UdpData = { 'u', '1' , 0, 0, 0, EROUND::MAIN };
+	p1UdpData = { 'u', '1' , 390, 390, 0, EROUND::MAIN };
 	p1TcpData = { 't', '1' , false, 0, 0,false, 100 };
 
 
-	p2UdpData = { 'u', '2' , 0, 0, 0, EROUND::MAIN };
+	p2UdpData = { 'u', '2' , 390, 390, 0, EROUND::MAIN };
 	p2TcpData = { 't', '2' , false, 0, 0,false, 100 };
 
 	char type;
@@ -84,8 +86,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	int teleportYpos;
 	bool useDash;
 	int hp;
-
-	//CreateSocket();
 
 	//윈도우 출력
 	ShowWindow(hWnd, nCmdShow);
@@ -131,16 +131,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		tmp.bottom = 0;
 		Tp = FALSE;
 		Tp_2 = FALSE;
-		Player_1.top = 380;
-		Player_1.bottom = 405;
-		Player_1.left = 380;
-		Player_1.right = 405;
+		Player_1.top = p1UdpData.playerYpos - 12.5;
+		Player_1.bottom = p1UdpData.playerYpos + 12.5;
+		Player_1.left = p1UdpData.playerXpos - 12.5;
+		Player_1.right = p1UdpData.playerXpos + 12.5;
 		PLAYER1_HIT = 0;
 
-		Player_2.top = 380;
-		Player_2.bottom = 405;
-		Player_2.left = 410;
-		Player_2.right = 435;
+		Player_2.top = p2UdpData.playerYpos - 12.5;
+		Player_2.bottom = p2UdpData.playerYpos + 12.5;
+		Player_2.left = p2UdpData.playerXpos - 12.5;
+		Player_2.right = p2UdpData.playerXpos + 12.5;
 		PLAYER2_HIT = 0;
 
 		Laser_Boom = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_LASERBOOM));
@@ -171,7 +171,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			eRound = MAIN;
 			break;
 		case SelectPlay:
-			ClickRange(lParam, eRound);
+			multiStart = ClickRange(lParam, eRound);
 			break;
 		case Select:
 			ClickRange(lParam, eRound);
@@ -198,10 +198,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_TIMER:
-		//sendTcpData(p1TcpData);
-		//recvTcpData();
-		//sendUdpData(p1UdpData);
-		//recvUdpData();
+		UpdateData();
+		if (multiStart == 1 && !multiOn)
+		{
+			CreateSocket();
+			multiOn = true;
+			multiStart++;
+		}
+
+		if (multiStart >= 1)
+		{
+			sendTcpData(p1TcpData);
+			p1TcpData = *recvTcpData();
+			//sendUdpData(p1UdpData);
+			//recvUdpData();
+		}
 
 		if (PauseOnOff)
 		{
@@ -211,38 +222,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				if (GetAsyncKeyState('A') < 0)
 				{
-					Player_1.left -= 3;
-					Player_1.right -= 3;
-					if (Player_1.left < 0)
+					p1UdpData.playerXpos -= 3;
+
+					if (p1UdpData.playerXpos < 12.5)
 					{
-						Player_1.left = 0;
-						Player_1.right = 25;
+						p1UdpData.playerXpos = 12.5;
 					}
 					PLAYER1DR = LEFT;
 				}
 
 				else if (GetAsyncKeyState('D') < 0)
 				{
-					Player_1.left += 3;
-					Player_1.right += 3;
+					p1UdpData.playerXpos += 3;
 
-					if (Player_1.right > 1184)
+					if (p1UdpData.playerXpos > 1171.5)
 					{
-						Player_1.left = 1159;
-						Player_1.right = 1184;
+						p1UdpData.playerXpos = 1171.5;
 					}
 					PLAYER1DR = RIGHT;
 				}
 
 				if (GetAsyncKeyState('W') < 0)
 				{
-					Player_1.top -= 3;
-					Player_1.bottom -= 3;
+					p1UdpData.playerYpos -= 3;
 
-					if (Player_1.top < 0)
+					if (p1UdpData.playerYpos < 12.5)
 					{
-						Player_1.top = 0;
-						Player_1.bottom = 25;
+						p1UdpData.playerYpos = 12.5;
 					}
 
 					switch (PLAYER1DR)
@@ -261,8 +267,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				else if (GetAsyncKeyState('S') < 0)
 				{
-					Player_1.top += 3;
-					Player_1.bottom += 3;
+					p1UdpData.playerYpos += 3;
+
 					switch (PLAYER1DR)
 					{
 					case STOP:
@@ -276,14 +282,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
-					if (Player_1.bottom > WindowSize.bottom - 20)
+					if (p1UdpData.playerYpos > WindowSize.bottom - 52.5)
 					{
-						Player_1.top = WindowSize.bottom - 45;
-						Player_1.bottom = WindowSize.bottom - 20;
+						p1UdpData.playerYpos = WindowSize.bottom - 52.5;
 					}
 				}
 
-				PLAYER2DR = STOP;
+			/*	PLAYER2DR = STOP;
 
 				if (GetAsyncKeyState('J') < 0)
 				{
@@ -357,7 +362,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						Player_2.top = WindowSize.bottom - 45;
 						Player_2.bottom = WindowSize.bottom - 20;
 					}
-				}
+				}*/
 
 
 				CheckBullet(bullet_head);
@@ -875,51 +880,45 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if (wParam == 'E')
 		{
 			effPlaySound(jump);
+			p1TcpData.useDash = true;
 
 			if (GetAsyncKeyState('A') < 0)
 			{
-				Player_1.left -= 100;
-				Player_1.right -= 100;
+				p1UdpData.playerXpos -= 100;
 
-				if (Player_1.left < 0)
+				if (p1UdpData.playerXpos < 12.5)
 				{
-					Player_1.left = 0;
-					Player_1.right = 25;
+					p1UdpData.playerXpos = 12.5;
 				}
 			}
 
 			if (GetAsyncKeyState('W') < 0)
 			{
-				Player_1.top -= 100;
-				Player_1.bottom -= 100;
-				if (Player_1.top < 0)
+				p1UdpData.playerYpos -= 100;
+
+				if (p1UdpData.playerYpos < 12.5)
 				{
-					Player_1.top = 0;
-					Player_1.bottom = 25;
+					p1UdpData.playerYpos = 12.5;
 				}
 			}
 
 			if (GetAsyncKeyState('S') < 0)
 			{
-				Player_1.top += 100;
-				Player_1.bottom += 100;
+				p1UdpData.playerYpos += 100;
 
-				if (Player_1.bottom > WindowSize.bottom - 20)
+				if (p1UdpData.playerYpos > WindowSize.bottom - 52.5)
 				{
-					Player_1.top = WindowSize.bottom - 45;
-					Player_1.bottom = WindowSize.bottom - 20;
+					p1UdpData.playerYpos = 52.5;
 				}
 			}
 
 			if (GetAsyncKeyState('D') < 0)
 			{
-				Player_1.left += 100;
-				Player_1.right += 100;
+				p1UdpData.playerXpos += 100;
 
-				if (Player_1.right > 1184)
+				if (p1UdpData.playerXpos > 1171.5)
 				{
-					Player_1.left = 1159;
-					Player_1.right = 1184;
+					p1UdpData.playerXpos = 1171.5;
 				}
 			}
 		}
@@ -1163,20 +1162,28 @@ int CreateSocket()
 
 	//connect()
 	//serveraddr;
-	ZeroMemory(&serveraddr, sizeof(serveraddr));
-	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_addr.S_un.S_addr = inet_addr(SERVERIP);
-	serveraddr.sin_port = htons(SERVERPORT);
+	ZeroMemory(&Tserveraddr, sizeof(Tserveraddr));
+	Tserveraddr.sin_family = AF_INET;
+	Tserveraddr.sin_addr.S_un.S_addr = inet_addr(SERVERIP);
+	Tserveraddr.sin_port = htons(SERVERPORT);
 
+	ZeroMemory(&Userveraddr, sizeof(Userveraddr));
+	Userveraddr.sin_family = AF_INET;
+	Userveraddr.sin_addr.S_un.S_addr = inet_addr(SERVERIP);
+	Userveraddr.sin_port = htons(SERVERPORT);
 
-	//retval = connect(TCPsock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-	//if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
+	retval = connect(TCPsock, (SOCKADDR*)&Tserveraddr, sizeof(Tserveraddr));
+	if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
 
 }
 
 int sendTcpData(tcpdata playerData)
 {
 	int retval;
+	
+	//retval = connect(TCPsock, (SOCKADDR*)&Tserveraddr, sizeof(Tserveraddr));
+	//if (retval == SOCKET_ERROR) err_quit((char*)"connect()");
+
 	// 데이터 통신에 사용할 변수
 	char buf[BUFSIZE];
 	int sendDataSize = sizeof(tcpData);
@@ -1187,7 +1194,11 @@ int sendTcpData(tcpdata playerData)
 	// 구조체 크기 전송
 	//retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
 
+	playerData.teleportXpos += 1;
+
 	retval = send(TCPsock, (char *)&playerData, sizeof(playerData), 0);
+
+
 
 	return 0;
 }
@@ -1207,7 +1218,7 @@ int sendUdpData(udpdata playerData)
 	//	(SOCKADDR *)&serveraddr, sizeof(serveraddr));
 
 	retval = sendto(UDPsock, (char*)&playerData, sizeof(playerData), 0,
-		(SOCKADDR*)&serveraddr, sizeof(serveraddr));
+		(SOCKADDR*)&Userveraddr, sizeof(Userveraddr));
 	return 0;
 }
 
@@ -1222,23 +1233,36 @@ tcpData* recvTcpData()
 
 	tcpdata *tData = (tcpdata*)buffer;
 
-	cout << tData->type << endl;
 	return tData;
 }
 
 udpData* recvUdpData()
 {
-	int addrlen = sizeof(serveraddr);
+	int addrlen = sizeof(Userveraddr);
 	int retval;
 	int getSize;
 	char buffer[500];
 	
 	getSize = recvfrom(UDPsock, buffer, sizeof(buffer) - 1, 0,
-		(SOCKADDR*)&serveraddr, &addrlen);
+		(SOCKADDR*)&Userveraddr, &addrlen);
 	buffer[getSize] = '\0';
 
 	udpData* uData = (udpData*)buffer;
 
 	cout << uData->type << endl;
 	return uData;
+}
+
+void UpdateData()
+{
+	Player_1.left = p1UdpData.playerXpos - 12.5;
+	Player_1.right = p1UdpData.playerXpos + 12.5;
+	Player_1.top = p1UdpData.playerYpos - 12.5;
+	Player_1.bottom = p1UdpData.playerYpos + 12.5;
+
+
+	Player_2.left = p2UdpData.playerXpos - 12.5;
+	Player_2.right = p2UdpData.playerXpos + 12.5;
+	Player_2.top = p2UdpData.playerYpos - 12.5;
+	Player_2.bottom = p2UdpData.playerYpos + 12.5;
 }
