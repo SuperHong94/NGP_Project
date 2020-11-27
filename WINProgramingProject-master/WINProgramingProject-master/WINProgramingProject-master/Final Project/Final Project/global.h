@@ -69,7 +69,7 @@ typedef struct tcpdata
 	int teleportXpos;
 	int teleportYpos;
 	bool useDash;
-	int hp;
+	float hp;
 }tcpData;
 #pragma pack()
 

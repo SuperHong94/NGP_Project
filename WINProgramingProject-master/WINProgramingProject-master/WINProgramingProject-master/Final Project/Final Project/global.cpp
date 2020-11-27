@@ -753,12 +753,12 @@ void CheckBulletCrush(Boom* head)
 			PLAYER1_HIT = 50;
 			effPlaySound(Damage);
 		}
-		if (PLAYER2_HIT == 0 && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
-		{
-			Energybar2.right -= 200;
-			PLAYER2_HIT = 50;
-			effPlaySound(Damage);
-		}
+		//if (PLAYER2_HIT == 0 && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
+		//{
+		//	Energybar2.right -= 200;
+		//	PLAYER2_HIT = 50;
+		//	effPlaySound(Damage);
+		//}
 	}
 }
 
@@ -774,12 +774,12 @@ void CheckBoomCrush(Boom* head)
 			PLAYER1_HIT = 50;
 			effPlaySound(Damage);
 		}
-		if ((PLAYER2_HIT == 0) && (p->nextBoom->boomAnimaition >= 100) && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
-		{
-			Energybar2.right -= 200;
-			PLAYER2_HIT = 50;
-			effPlaySound(Damage);
-		}
+		//if ((PLAYER2_HIT == 0) && (p->nextBoom->boomAnimaition >= 100) && Crush(&Player_2, p->nextBoom->leftTop.x, p->nextBoom->leftTop.y, p->nextBoom->rightBottom.x, p->nextBoom->rightBottom.y))
+		//{
+		//	Energybar2.right -= 200;
+		//	PLAYER2_HIT = 50;
+		//	effPlaySound(Damage);
+		//}
 	}
 }
 

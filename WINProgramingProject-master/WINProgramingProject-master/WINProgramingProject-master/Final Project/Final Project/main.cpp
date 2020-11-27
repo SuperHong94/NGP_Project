@@ -72,11 +72,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
 	//int cnt = 0
 	//	1
-	p1UdpData = { 'u', '1' , 390, 390, 0, EROUND::MAIN };
+	p1UdpData = { 'u', '1' , 390, 390, EROUND::MAIN };
 	p1TcpData = { 't', '1' , false, 0, 0,false, 100 };
 
 
-	p2UdpData = { 'u', '2' , 390, 390, 0, EROUND::MAIN };
+	p2UdpData = { 'u', '2' , 390, 390, EROUND::MAIN };
 	p2TcpData = { 't', '2' , false, 0, 0,false, 100 };
 
 	char type;
@@ -926,98 +926,96 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (Tp)
 			{
-				Player_1.bottom = tmp.bottom;
-				Player_1.left = tmp.left;
-				Player_1.right = tmp.right;
-				Player_1.top = tmp.top;
+				p1UdpData.playerXpos = p1TcpData.teleportXpos;
+				p1UdpData.playerYpos = p1TcpData.teleportYpos;
+
 				effPlaySound(teleP);
 				Tp = FALSE;
+				p1TcpData.useTeleport = true;
 			}
 			else
 			{
-
-				tmp.bottom = Player_1.bottom;
-				tmp.left = Player_1.left;
-				tmp.right = Player_1.right;
-				tmp.top = Player_1.top;
+				p1TcpData.teleportXpos = p1UdpData.playerXpos;
+				p1TcpData.teleportYpos = p1UdpData.playerYpos;
+				p1TcpData.useTeleport = false;
 				Tp = TRUE;
 
 			}
 		}
 
-		if (wParam == 'O')
-		{
-			effPlaySound(jump);
+		//if (wParam == 'O')
+		//{
+		//	effPlaySound(jump);
 
-			if (GetAsyncKeyState('J') < 0)
-			{
-				Player_2.left -= 100;
-				Player_2.right -= 100;
+		//	if (GetAsyncKeyState('J') < 0)
+		//	{
+		//		Player_2.left -= 100;
+		//		Player_2.right -= 100;
 
-				if (Player_2.left < 0)
-				{
-					Player_2.left = 0;
-					Player_2.right = 25;
-				}
-			}
+		//		if (Player_2.left < 0)
+		//		{
+		//			Player_2.left = 0;
+		//			Player_2.right = 25;
+		//		}
+		//	}
 
-			if (GetAsyncKeyState('I') < 0)
-			{
-				Player_2.top -= 100;
-				Player_2.bottom -= 100;
-				if (Player_2.top < 0)
-				{
-					Player_2.top = 0;
-					Player_2.bottom = 25;
-				}
-			}
+		//	if (GetAsyncKeyState('I') < 0)
+		//	{
+		//		Player_2.top -= 100;
+		//		Player_2.bottom -= 100;
+		//		if (Player_2.top < 0)
+		//		{
+		//			Player_2.top = 0;
+		//			Player_2.bottom = 25;
+		//		}
+		//	}
 
-			if (GetAsyncKeyState('K') < 0)
-			{
-				Player_2.top += 100;
-				Player_2.bottom += 100;
+		//	if (GetAsyncKeyState('K') < 0)
+		//	{
+		//		Player_2.top += 100;
+		//		Player_2.bottom += 100;
 
-				if (Player_2.bottom > WindowSize.bottom - 20)
-				{
-					Player_2.top = WindowSize.bottom - 45;
-					Player_2.bottom = WindowSize.bottom - 20;
-				}
-			}
+		//		if (Player_2.bottom > WindowSize.bottom - 20)
+		//		{
+		//			Player_2.top = WindowSize.bottom - 45;
+		//			Player_2.bottom = WindowSize.bottom - 20;
+		//		}
+		//	}
 
-			if (GetAsyncKeyState('L') < 0)
-			{
-				Player_2.left += 100;
-				Player_2.right += 100;
+		//	if (GetAsyncKeyState('L') < 0)
+		//	{
+		//		Player_2.left += 100;
+		//		Player_2.right += 100;
 
-				if (Player_2.right > 1184)
-				{
-					Player_2.left = 1159;
-					Player_2.right = 1184;
-				}
-			}
-		}
-		else if (wParam == 'P')
-		{
-			if (Tp_2)
-			{
-				Player_2.bottom = tmp2.bottom;
-				Player_2.left = tmp2.left;
-				Player_2.right = tmp2.right;
-				Player_2.top = tmp2.top;
-				effPlaySound(teleP);
-				Tp_2 = FALSE;
-			}
-			else
-			{
+		//		if (Player_2.right > 1184)
+		//		{
+		//			Player_2.left = 1159;
+		//			Player_2.right = 1184;
+		//		}
+		//	}
+		//}
+		//else if (wParam == 'P')
+		//{
+		//	if (Tp_2)
+		//	{
+		//		Player_2.bottom = tmp2.bottom;
+		//		Player_2.left = tmp2.left;
+		//		Player_2.right = tmp2.right;
+		//		Player_2.top = tmp2.top;
+		//		effPlaySound(teleP);
+		//		Tp_2 = FALSE;
+		//	}
+		//	else
+		//	{
 
-				tmp2.bottom = Player_2.bottom;
-				tmp2.left = Player_2.left;
-				tmp2.right = Player_2.right;
-				tmp2.top = Player_2.top;
-				Tp_2 = TRUE;
+		//		tmp2.bottom = Player_2.bottom;
+		//		tmp2.left = Player_2.left;
+		//		tmp2.right = Player_2.right;
+		//		tmp2.top = Player_2.top;
+		//		Tp_2 = TRUE;
 
-			}
-		}
+		//	}
+		//}
 		switch (wParam) {
 		case VK_BACK:
 			sj_Timer -= 10;
@@ -1082,9 +1080,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			Animation(hDC, g_hInst, head, bullet_head);
 			//SelectObject(hDC, oldBackBit);
 			DrawEnergybar(hDC, g_hInst, eRound);
-			DrawEnergybar2(hDC, g_hInst, eRound);
+			if(multiOn)
+				DrawEnergybar2(hDC, g_hInst, eRound);
 			GetClientRect(hWnd, &WindowSize);
-
 		}
 
 		
@@ -1260,9 +1258,21 @@ void UpdateData()
 	Player_1.top = p1UdpData.playerYpos - 12.5;
 	Player_1.bottom = p1UdpData.playerYpos + 12.5;
 
+	if (Tp)
+	{
+		tmp.bottom = p1TcpData.teleportYpos + 12.5;
+		tmp.left = p1TcpData.teleportXpos - 12.5;
+		tmp.right = p1TcpData.teleportXpos + 12.5;
+		tmp.top = p1TcpData.teleportYpos - 12.5;
+	}
+
+	p1TcpData.hp = (Energybar.right) * 100 / WindowSize.right;
+
 
 	Player_2.left = p2UdpData.playerXpos - 12.5;
 	Player_2.right = p2UdpData.playerXpos + 12.5;
 	Player_2.top = p2UdpData.playerYpos - 12.5;
 	Player_2.bottom = p2UdpData.playerYpos + 12.5;
+
+	Energybar2.right = p2TcpData.hp* WindowSize.right / 100;
 }
