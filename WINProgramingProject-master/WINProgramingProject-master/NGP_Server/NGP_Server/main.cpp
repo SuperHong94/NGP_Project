@@ -2,7 +2,7 @@
 #include "CTCPsocket.h"
 #include "Utility.h"
 #include "CPlayer.h"
-
+#include "CUDPsocket.h"
 
 int g_clientCnt = 0;
 // 소켓 함수 오류 출력 후 종료
@@ -17,7 +17,7 @@ CPlayer player2;
 
 int main(int argc, char* argv[])
 {
-	int retval;
+	int retval=0;
 	// 윈속 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -26,7 +26,7 @@ int main(int argc, char* argv[])
 	// socket()  tcp 소켓, bind, listen 까지 함
 	
 	CTCPsocket tcpSocket=CTCPsocket(&player1,&player2);
-
+	CUDPsocket udpSocket = CUDPsocket(&player1, &player2);
 
 	SOCKET udp_sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (udp_sock == INVALID_SOCKET) err_quit("socket()");
@@ -59,6 +59,9 @@ int main(int argc, char* argv[])
 			(LPVOID)&tcpSocket, 0, NULL);
 		if (hThread == NULL) { closesocket(client_sock); }
 		else { CloseHandle(hThread); }
+		udpSocket.UDPRecvData();
+		udpSocket.UDPSendData();
+		
 	}
 
 	// 윈속 종료

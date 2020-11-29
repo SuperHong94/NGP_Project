@@ -1,5 +1,5 @@
+#include "stdafx.h"
 #include "CPlayer.h"
-
 CPlayer::CPlayer()
 {
     m_pos.x = 0; m_pos.y = 0;
@@ -12,6 +12,11 @@ CPlayer::CPlayer()
 
 CPlayer::~CPlayer()
 {
+}
+
+myPOINT CPlayer::Getpos()
+{
+    return m_pos;
 }
 
 bool CPlayer::GetUseTeleport()

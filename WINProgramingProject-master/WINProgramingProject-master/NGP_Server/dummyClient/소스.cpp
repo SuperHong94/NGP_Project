@@ -7,8 +7,8 @@
 #include <iostream>
 #include "CPlayer.h"
 
-//#define SERVERIP "127.0.0.1"
-#define SERVERIP "192.168.219.100"
+#define SERVERIP "127.0.0.1"
+//#define SERVERIP "192.168.219.100"
 #define SERVERPORT 9000
 #define BUFSIZE 1200
 

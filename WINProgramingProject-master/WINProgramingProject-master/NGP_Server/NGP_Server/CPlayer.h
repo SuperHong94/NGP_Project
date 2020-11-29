@@ -12,10 +12,13 @@ class CPlayer
 	myPOINT m_telePos;
 	bool m_useDash;
 	int m_hp;
+
+	
 public:
 	CPlayer();
 	virtual ~CPlayer();
 
+	myPOINT Getpos();
 	bool GetUseTeleport();
 	myPOINT GetTelePos();
 	bool GetuseDash();
@@ -26,5 +29,7 @@ public:
 	void SetTelePos(myPOINT pos);
 	void SetDash(bool dash);
 	void SetHP(int hp); 
+
+	EROUND m_state;
 };
 

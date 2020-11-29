@@ -1,0 +1,8 @@
+﻿  CTCPsocket.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\NGP_Server\CTCPsocket.cpp(190,3): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  CUDPsocket.cpp
+  main.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\NGP_Server\main.cpp(55,4): warning C4996: 'inet_ntoa': Use inet_ntop() or InetNtop() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  Utility.cpp
+  코드를 생성하고 있습니다...
+  NGP_Server.vcxproj -> C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\WINProgramingProject-master\NGP_Server\Debug\NGP_Server.exe
