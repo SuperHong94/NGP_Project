@@ -14,6 +14,14 @@
 #define BUFSIZE    512
 using namespace std;
 
+
+extern HANDLE g_hTCPSendEvent;
+extern HANDLE g_hTCPRecvEvent;
+extern HANDLE g_hTCPSendEvent2;
+extern HANDLE g_hTCPRecvEvent2;
+extern HANDLE g_hUDPEvent;
+extern HANDLE g_hUDPEvent2;
+
 enum EROUND {
 	Round1,
 	MAIN,
@@ -32,7 +40,6 @@ typedef struct udpdata
 	char playerID;
 	int playerXpos;
 	int playerYpos;
-	int collisionDamage;
 	EROUND sceneState;
 }udpData;
 
@@ -44,6 +51,6 @@ typedef struct tcpdata
 	int teleportXpos;
 	int teleportYpos;
 	bool useDash;
-	int hp;
+	float hp;
 }tcpData;
 #pragma pack()

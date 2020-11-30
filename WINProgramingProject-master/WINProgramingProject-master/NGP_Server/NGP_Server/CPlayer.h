@@ -11,7 +11,7 @@ class CPlayer
 	bool m_useTeleport;
 	myPOINT m_telePos;
 	bool m_useDash;
-	int m_hp;
+	float m_hp;
 
 	
 public:

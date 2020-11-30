@@ -12,24 +12,53 @@ int g_clientCnt = 0;
 CPlayer player1;
 CPlayer player2;
 
+//이벤트 핸들
+HANDLE g_hTCPSendEvent;
+HANDLE g_hTCPRecvEvent;
 
-
+HANDLE g_hTCPSendEvent2;
+HANDLE g_hTCPRecvEvent2;
+HANDLE g_hUDPEvent;
+HANDLE g_hUDPEvent2;
 
 int main(int argc, char* argv[])
 {
-	int retval=0;
+	//이벤트 생성
+	//player1
+	g_hTCPSendEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_hTCPSendEvent == NULL) return 1;
+
+	g_hTCPRecvEvent = CreateEvent(NULL, TRUE, TRUE, NULL);
+	if (g_hTCPRecvEvent == NULL) return 1;
+
+	//player2
+	g_hTCPSendEvent2 = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_hTCPSendEvent2 == NULL) return 1;
+
+	g_hTCPRecvEvent2 = CreateEvent(NULL, TRUE, TRUE, NULL);
+	if (g_hTCPRecvEvent2 == NULL) return 1;
+
+
+	g_hUDPEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_hUDPEvent == NULL)
+		return 1;
+
+	g_hUDPEvent2 = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (g_hUDPEvent2 == NULL)
+		return 1;
+
+		
 	// 윈속 초기화
 	WSADATA wsa;
 	if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
 		return 1;
 
 	// socket()  tcp 소켓, bind, listen 까지 함
-	
-	CTCPsocket tcpSocket=CTCPsocket(&player1,&player2);
+
+	CTCPsocket tcpSocket = CTCPsocket(&player1, &player2);
 	CUDPsocket udpSocket = CUDPsocket(&player1, &player2);
 
-	SOCKET udp_sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (udp_sock == INVALID_SOCKET) err_quit("socket()");
+
 
 
 
@@ -40,14 +69,15 @@ int main(int argc, char* argv[])
 	HANDLE hThread;
 
 
+	int retval = 0;
+	// accept()
 	while (1) {
-		// accept()
 		addrlen = sizeof(tcpSocket.GetClientaddr());
 		clientaddr = tcpSocket.GetClientaddr();
 		client_sock = tcpSocket.TCPAccept();
 		if (client_sock == INVALID_SOCKET) {
 			err_display("accept()");
-			break;
+			//break;
 		}
 
 		// 접속한 클라이언트 정보 출력
@@ -55,13 +85,37 @@ int main(int argc, char* argv[])
 			inet_ntoa(clientaddr.sin_addr), ntohs(clientaddr.sin_port));
 
 		// 스레드 생성
-		hThread = CreateThread(NULL, 0, ProcessClient,
-			(LPVOID)&tcpSocket, 0, NULL);
-		if (hThread == NULL) { closesocket(client_sock); }
-		else { CloseHandle(hThread); }
-		udpSocket.UDPRecvData();
-		udpSocket.UDPSendData();
-		
+		hThread = CreateThread(NULL, 0, ProcessClient, (LPVOID)&tcpSocket, 0, NULL);
+		if (hThread == NULL)
+		{
+			closesocket(client_sock);
+		}
+		else
+		{
+			CloseHandle(hThread);
+		}
+
+		//TCPRecvEvent가 끝나기를 기다린다.
+		retval = WaitForSingleObject(g_hTCPSendEvent, INFINITE);
+		if (g_clientCnt == 2)
+			retval = WaitForSingleObject(g_hTCPSendEvent2, INFINITE);
+
+
+		cout << "udp데이터 받기" << endl;
+		//udpSocket.UDPRecvData();
+		//udpSocket.UDPSendData();
+		cout << "udp완료\n	" << endl;
+
+		//UDPEvent완료
+		ResetEvent(g_hTCPSendEvent);
+		if (g_clientCnt == 2)
+			ResetEvent(g_hTCPSendEvent2);
+
+
+		SetEvent(g_hUDPEvent);
+		if (g_clientCnt == 2)
+			SetEvent(g_hUDPEvent2);
+
 	}
 
 	// 윈속 종료

@@ -6,7 +6,7 @@ CPlayer::CPlayer()
     m_useTeleport=false;
     m_telePos.x = 0; m_telePos.y = 0;
     m_useDash=false;
-    m_hp=100;
+    m_hp=100.f;
 
 }
 
@@ -41,7 +41,9 @@ int CPlayer::GetHp()
 
 void CPlayer::SetPos(myPOINT pos)
 {
-    m_pos = pos;
+    m_pos.x = pos.x;
+    m_pos.y = pos.y;
+    //m_pos = pos;
 }
 
 
