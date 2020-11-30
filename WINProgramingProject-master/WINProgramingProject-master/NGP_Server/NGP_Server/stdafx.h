@@ -10,6 +10,8 @@
 #include<iomanip>
 
 
+
+
 #define SERVERPORT 9000
 #define BUFSIZE    512
 using namespace std;
@@ -17,11 +19,10 @@ using namespace std;
 
 extern HANDLE g_hTCPSendEvent;
 extern HANDLE g_hTCPRecvEvent;
-extern HANDLE g_hTCPSendEvent2;
-extern HANDLE g_hTCPRecvEvent2;
-extern HANDLE g_hUDPEvent;
-extern HANDLE g_hUDPEvent2;
 
+extern HANDLE g_hUDPEvent;
+
+extern char g_Id;
 enum EROUND {
 	Round1,
 	MAIN,
@@ -30,7 +31,8 @@ enum EROUND {
 	Round2,
 	YouDie,
 	YouWin,
-	SelectPlay
+	SelectPlay,
+	MultiReady
 };
 
 #pragma pack(1)
@@ -50,6 +52,8 @@ typedef struct tcpdata
 	bool useTeleport;
 	int teleportXpos;
 	int teleportYpos;
+	int playerXpos;
+	int playerYpos;
 	bool useDash;
 	float hp;
 }tcpData;

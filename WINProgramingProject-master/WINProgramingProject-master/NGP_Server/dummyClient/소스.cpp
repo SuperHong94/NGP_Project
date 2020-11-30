@@ -13,18 +13,8 @@
 #define BUFSIZE 1200
 
 using namespace std;
-#pragma pack(1)
-struct TCPDATA
-{
-	char type;
-	char playerID;
-	bool useTeleport;
-	int teleportXpos;
-	int teleportYpos;
-	bool useDash;
-	int hp;
-};
-#pragma pack()
+
+
 
 CPlayer mainPlayer;
 CPlayer otherPlayer;
@@ -82,6 +72,8 @@ int recvn(SOCKET s, char* buf, int len, int flags)
 	return (len - left);
 }
 
+
+
 int main(int argc, char* argv[])
 {
 	int retval;
@@ -95,7 +87,14 @@ int main(int argc, char* argv[])
 	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
 	if (sock == INVALID_SOCKET) err_quit("socket()");
 
-
+	TCPDATA tData;
+	tData.hp = 100;
+	tData.playerID = '1';
+	tData.teleportXpos = 0;
+	tData.teleportYpos = 0;
+	tData.type = 't';
+	udpData* uData=NULL;
+	uData = new udpData;
 	//connet()
 	SOCKADDR_IN serveraddr;
 	ZeroMemory(&serveraddr, sizeof(serveraddr));
@@ -104,44 +103,79 @@ int main(int argc, char* argv[])
 	serveraddr.sin_port = htons(SERVERPORT);
 	retval = connect(sock, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
 	if (retval == SOCKET_ERROR)err_quit("connect()");
-
+	char id = ' ';
 	//데이터 통신에 사용할 변수
+
+
+	SOCKADDR_IN peeraddr;
+	int addrlen;
+	int len;
+	DWORD WINAPI UdpClient(LPVOID arg);
+	DWORD WINAPI ProcessClient(LPVOID arg);
 	while (1) {
 		char buffer[BUFSIZ];
 		TCPDATA* tcpData;
 		myPOINT telPos;// 
-		int id = 0;
 
-		
-		retval = recv(sock, buffer, BUFSIZ-1, 0);
-		cout << "데이터를 받습니다.\n";
-		cout << "main x좌표" << mainPlayer.GetTelePos().x << '\n';
-		cout << "other x좌표" << otherPlayer.GetTelePos().x << '\n';
-	
+		cout << "tcp받기시작\n";
+		retval = recv(sock, buffer, BUFSIZ - 1, 0);
+		cout << "tcp받기 완료\n";
+
 		buffer[retval] = '\0';
 		tcpData = (TCPDATA*)buffer;
+		id = tcpData->playerID;
 		otherPlayer.SetUseTeleport(tcpData->useTeleport);
 		telPos.x = tcpData->teleportXpos;
 		telPos.y = tcpData->teleportYpos;
 		otherPlayer.SetTelePos(telPos);
-		myPOINT t;
-		t.y = 0;
-		cout << "갱신할 main의 x좌표 입력\n";
-		cin >> t.x;
-		
 
-		id = tcpData->playerID;
-		
-		if (t.x == 0)
-			break;
-		mainPlayer.SetTelePos(t);
+		tcpData->playerID = id;
 		tcpData->useTeleport = mainPlayer.GetUseTeleport();
 		tcpData->teleportXpos = mainPlayer.GetTelePos().x;
 		tcpData->teleportYpos = mainPlayer.GetTelePos().y;
 		tcpData->useDash = mainPlayer.GetuseDash();
-
+		cout << "tcp보내기시작\n";
 		retval = send(sock, (char*)tcpData, sizeof(TCPDATA), 0);
+		cout << "tcp보내기 완료\n";
 
+
+		uData->playerID = id;
+		telPos = mainPlayer.Getpos();
+		uData->playerXpos = telPos.x;
+		uData->playerYpos = telPos.y;
+		uData->sceneState = mainPlayer.m_state;
+		cout << "udp보내기시작\n";
+		retval = sendto(sock, (char*)uData, sizeof(udpdata), 0,
+			(SOCKADDR*)&serveraddr, sizeof(serveraddr));
+		cout << "udp보내기완료\n";
+		int size = sizeof(serveraddr);
+
+		ZeroMemory(buffer, 512);
+		addrlen = sizeof(peeraddr);
+		cout << "udp받기시작\n";
+		retval = recvfrom(sock, buffer, 512 - 1, 0,
+			(SOCKADDR*)&peeraddr, &addrlen);
+		cout << "udp받기 완료\n";
+		buffer[retval] = '\0';
+		uData = (udpData*)buffer;
+		if (uData->playerID == id) {
+			telPos.x = uData->playerXpos;
+			telPos.y = uData->playerYpos;
+			otherPlayer.SetPos(telPos);
+			otherPlayer.m_state=uData->sceneState;
+		}
+
+
+
+
+
+		
+		cout << "-------플레이어 정보------\n";
+		cout << "id " << id << ' ' << mainPlayer.Getpos().x << endl;
+		cout << "\n다른 플레이어 정보\n"<<otherPlayer.Getpos().x<<endl;
+		cout << "바꿀 x좌표 입력: ";
+		cin >> telPos.x;
+		mainPlayer.SetPos(telPos);
 	}
 	//closesoket()
 	closesocket(sock);
@@ -150,3 +184,5 @@ int main(int argc, char* argv[])
 	WSACleanup();
 	return 0;
 }
+
+DWORD WINAPI ProcessClient(LPVOID arg);

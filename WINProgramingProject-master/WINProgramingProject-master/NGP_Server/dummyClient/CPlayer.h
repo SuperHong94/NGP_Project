@@ -1,5 +1,37 @@
 #pragma once
+enum EROUND {
+	Round1,
+	MAIN,
+	HELP,
+	Select,
+	Round2,
+	YouDie,
+	YouWin,
+	SelectPlay,
+	MultiReady
+};
 
+#pragma pack(1)
+typedef struct udpdata
+{
+	char type;  //u면 udp데이터
+	char playerID;
+	int playerXpos;
+	int playerYpos;
+	EROUND sceneState;
+}udpData;
+
+struct TCPDATA
+{
+	char type;
+	char playerID;
+	bool useTeleport;
+	int teleportXpos;
+	int teleportYpos;
+	bool useDash;
+	int hp;
+};
+#pragma pack()
 struct myPOINT
 {
 	int x; int y;

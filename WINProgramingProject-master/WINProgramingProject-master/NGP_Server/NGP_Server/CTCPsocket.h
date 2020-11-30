@@ -8,8 +8,7 @@ class CTCPsocket
 	SOCKET m_client_sock;
 	SOCKADDR_IN m_clientaddr;
 
-	CPlayer* m_pPlayer1;
-	CPlayer* m_pPlayer2;
+	
 public:
 
 	/// <summary>
@@ -30,7 +29,10 @@ public:
 	void TcpSendData(int index, SOCKET socket);
 
 	void TcpRecvData(int index, SOCKET socket);
+
+	CPlayer* m_pPlayer1;
+	CPlayer* m_pPlayer2;
 };
 
-DWORD WINAPI ProcessClient(LPVOID arg);
+
 

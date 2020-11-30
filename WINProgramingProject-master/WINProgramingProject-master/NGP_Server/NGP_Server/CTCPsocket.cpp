@@ -2,6 +2,7 @@
 #include "Utility.h"
 #include "CTCPsocket.h"
 #include "CPlayer.h"
+#include "CUDPsocket.h"
 CTCPsocket::CTCPsocket()
 {
 	//tcp 대기 소켓 생성
@@ -85,25 +86,34 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 	//Player 1에게는 Player 2정보를 보낸다.
 	tcpdata tcpData;
 	//ZeroMemory(&tcpData, 0);
+	myPOINT pos;
 	switch (index)
 	{
 	case 1:
 		tcpData.type = 't';
-		tcpData.playerID = '2';
+		tcpData.playerID = '1';
 		tcpData.useTeleport = m_pPlayer2->GetUseTeleport();
-		tcpData.teleportXpos = m_pPlayer2->GetTelePos().x;
-		tcpData.teleportYpos = m_pPlayer2->GetTelePos().y;
+		pos = m_pPlayer2->GetTelePos();
+		tcpData.teleportXpos = pos.x;
+		tcpData.teleportYpos = pos.y;
 		tcpData.useDash = m_pPlayer2->GetuseDash();
 		tcpData.hp = m_pPlayer2->GetHp();
+		pos = m_pPlayer2->Getpos();
+		tcpData.playerXpos = pos.x;
+		tcpData.playerYpos = pos.y;
 		break;
 	case 2:
 		tcpData.type = 't';
-		tcpData.playerID = '1';
+		tcpData.playerID = '2';
 		tcpData.useTeleport = m_pPlayer1->GetUseTeleport();
-		tcpData.teleportXpos = m_pPlayer1->GetTelePos().x;
-		tcpData.teleportYpos = m_pPlayer1->GetTelePos().y;
+		pos = m_pPlayer1->GetTelePos();
+		tcpData.teleportXpos = pos.x;
+		tcpData.teleportYpos = pos.y;
 		tcpData.useDash = m_pPlayer1->GetuseDash();
 		tcpData.hp = m_pPlayer1->GetHp();
+		pos = m_pPlayer1->Getpos();
+		tcpData.playerXpos = pos.x;
+		tcpData.playerYpos = pos.y;
 		break;
 
 	default:
@@ -113,7 +123,7 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 	int size = sizeof(tcpdata);
 	int retval = send(sock, (char*)&tcpData, size, 0);
 
-	std::cout << "보내야 되는 데이터량: " << size << " 보낸 데이터량" << retval << ' ' << tcpData.playerID << "의 telX:" << tcpData.teleportXpos << "를 보냅니다.\n";
+	//std::cout << "보내야 되는 데이터량: " << size << " 보낸 데이터량" << retval << ' ' << tcpData.playerID << "의 telX:" << tcpData.teleportXpos << "를 보냅니다.\n";
 	if (retval == SOCKET_ERROR) {
 		err_display("sendtcp()");
 		return;
@@ -131,7 +141,7 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 	myPOINT telPos;
 
 
-	cout << "데이터를 받습니다.\n";
+	//cout << "데이터를 받습니다.\n";
 
 	int retval = recv(sock, buffer, 512 - 1, 0);
 	//index가 1이면 플레이어1이 보낸정보이다.
@@ -139,7 +149,7 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 
 	tcpData = (tcpdata*)buffer;
 
-	std::cout << "받은데이터량:  " << retval << ' ' << tcpData->playerID << "에서 받은 데이터: " << tcpData->teleportXpos << endl;
+	//std::cout << "받은데이터량:  " << retval << ' ' << tcpData->playerID << "에서 받은 데이터: " << tcpData->teleportXpos << endl;
 	switch (index)
 	{
 	case 1:
@@ -147,6 +157,9 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 		telPos.x = tcpData->teleportXpos;
 		telPos.y = tcpData->teleportYpos;
 		m_pPlayer1->SetTelePos(telPos);
+		telPos.x = tcpData->playerXpos;
+		telPos.y = tcpData->playerYpos;
+		m_pPlayer1->SetPos(telPos);
 		m_pPlayer1->SetHP(tcpData->hp);
 		break;
 	case 2:
@@ -154,6 +167,9 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 		telPos.x = tcpData->teleportXpos;
 		telPos.y = tcpData->teleportYpos;
 		m_pPlayer2->SetTelePos(telPos);
+		telPos.x = tcpData->playerXpos;
+		telPos.y = tcpData->playerYpos;
+		m_pPlayer2->SetPos(telPos);
 		m_pPlayer2->SetHP(tcpData->hp);
 		break;
 	default:
@@ -163,68 +179,3 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 
 
 
-// 클라이언트와 데이터 통신 tcp
-DWORD WINAPI ProcessClient(LPVOID arg)
-{
-	g_clientCnt++;
-	//cout << g_clientCnt << "접속 완료" << endl;
-	int index = g_clientCnt;
-	CTCPsocket* tcpSocket = (CTCPsocket*)arg;
-	SOCKET client_sock = tcpSocket->GetClientSock();
-	SOCKADDR_IN clientaddr = tcpSocket->GetClientaddr();
-	int addrlen = sizeof(clientaddr);
-	int retval = 0;
-	//클라이언트 정보 얻기
-	getpeername(client_sock, (SOCKADDR*)&clientaddr, &addrlen);
-	while (1) {
-		cout << "recvEvent기다리기" << endl;
-		if (index == 1)
-			retval = WaitForSingleObject(g_hTCPRecvEvent, INFINITE);
-		else if (index == 2) {
-			retval = WaitForSingleObject(g_hTCPRecvEvent2, INFINITE);
-		}
-		cout << "tcprecv데이터 보내기 한다." << endl;
-		tcpSocket->TcpSendData(index, client_sock);
-		cout << "tcprecv데이터 보내기 완료." << endl;
-		//tcp이벤트동기화 이벤트로 udp에 넘기는 부분
-		//tcpSend완료 알림
-		if (index == 1) {
-			ResetEvent(g_hTCPRecvEvent);
-			SetEvent(g_hTCPSendEvent);
-		}
-		else if (index == 2)
-		{
-			ResetEvent(g_hTCPRecvEvent2);
-			SetEvent(g_hTCPSendEvent2);
-		}
-
-
-
-
-		//UDP데이터가 끝나기를 기다린다.
-		if (index == 1)
-			retval = WaitForSingleObject(g_hUDPEvent, INFINITE);
-		else if (index == 2)
-			retval = WaitForSingleObject(g_hUDPEvent2, INFINITE);
-		cout << "tcprecv데이터 받기 한다." << endl;
-		tcpSocket->TcpRecvData(index, client_sock);
-		cout << "tcprecv데이터 받기 완료." << endl;
-		//TCP리시브 받기 완료
-		if (index == 1) {
-			ResetEvent(g_hUDPEvent);
-			SetEvent(g_hTCPRecvEvent);
-		}
-		else if (index == 2) {
-			ResetEvent(g_hUDPEvent2);
-			SetEvent(g_hTCPRecvEvent2);
-		}
-
-	}
-
-	// closesocket()
-	closesocket(tcpSocket->GetClientSock());
-	printf("\n[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
-		inet_ntoa(tcpSocket->GetClientaddr().sin_addr), ntohs(tcpSocket->GetClientaddr().sin_port));
-
-	return 0;
-}
