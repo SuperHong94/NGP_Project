@@ -39,6 +39,7 @@ extern int score;
 extern int score;
 extern bool g_isMulti;
 
+
 enum EROUND {
 	Round1,
 	MAIN,
@@ -48,15 +49,13 @@ enum EROUND {
 	YouDie,
 	YouWin,
 	SelectPlay,
+	MultiReady,
 };
 #pragma pack(1)
 typedef struct udpdata
 {
 	char type;
 	char playerID;
-	int playerXpos;
-	int playerYpos;
-	EROUND sceneState;
 }udpData;
 #pragma pack()
 
@@ -68,10 +67,20 @@ typedef struct tcpdata
 	bool useTeleport;
 	int teleportXpos;
 	int teleportYpos;
+	int playerXpos;
+	int playerYpos;
 	bool useDash;
 	float hp;
+	EROUND sceneState;
 }tcpData;
 #pragma pack()
+
+
+extern udpData p1UdpData;
+extern tcpData p1TcpData;
+extern udpData p2UdpData;
+extern tcpData p2TcpData;
+
 
 enum PLAYERDIRECTION {
 	UP,

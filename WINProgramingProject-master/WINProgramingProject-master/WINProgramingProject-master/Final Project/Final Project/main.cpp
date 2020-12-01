@@ -9,7 +9,11 @@ EROUND eRound = MAIN;
 bool PauseOnOff = true;
 using namespace std;
 
-#define SERVERIP "192.168.219.100"
+//#define SERVERIP "192.168.219.100"
+//#define SERVERIP "192.168.219.103"
+//#define SERVERIP "192.168.43.181"
+#define SERVERIP "192.168.43.167"
+//#define SERVERIP "192.168.219.102"
 //#define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
 #define BUFSIZE 5000
@@ -17,6 +21,8 @@ using namespace std;
 vector<int> v;
 int acceptClientCnt = 0;
 int clientCnt = 0;
+
+bool multiSelect = false;
 
 // 오류 출력 함수
 void err_quit(char* msg);
@@ -32,8 +38,8 @@ bool multiOn = false;
 SOCKADDR_IN Tserveraddr, Userveraddr;
 int sendTcpData(tcpData playerData);
 int sendUdpData(udpData playerData);
-tcpData* recvTcpData();
-udpData* recvUdpData();
+void recvTcpData();
+void recvUdpData();
 void UpdateData();
 //udpData *p1UdpData = new udpData[1];
 //tcpData *p1TcpData = new tcpData[1];
@@ -72,12 +78,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	hWnd = CreateWindow(lpszClass, lpszWindowName, WS_OVERLAPPEDWINDOW, 0, 0, 1200, 800, NULL, (HMENU)NULL, hInstance, NULL);
 	//int cnt = 0
 	//	1
-	p1UdpData = { 'u', '1' , 390, 390, EROUND::MAIN };
-	p1TcpData = { 't', '1' , false, 0, 0,false, 100 };
+	p1UdpData = { 'u', '1' };
+	p1TcpData = { 't', '1' , false, 0, 0,390,390,false, 100 , EROUND::SelectPlay };
 
 
-	p2UdpData = { 'u', '2' , 390, 390, EROUND::MAIN };
-	p2TcpData = { 't', '2' , false, 0, 0,false, 100 };
+	p2UdpData = { 'u', '2'};
+	p2TcpData = { 't', '2' , false, 0, 0,390,390,false, 100 ,  EROUND::MAIN };
 
 	char type;
 	char playerID;
@@ -131,16 +137,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		tmp.bottom = 0;
 		Tp = FALSE;
 		Tp_2 = FALSE;
-		Player_1.top = p1UdpData.playerYpos - 12.5;
-		Player_1.bottom = p1UdpData.playerYpos + 12.5;
-		Player_1.left = p1UdpData.playerXpos - 12.5;
-		Player_1.right = p1UdpData.playerXpos + 12.5;
+		Player_1.top = p1TcpData.playerYpos - 12.5;
+		Player_1.bottom = p1TcpData.playerYpos + 12.5;
+		Player_1.left = p1TcpData.playerXpos - 12.5;
+		Player_1.right = p1TcpData.playerXpos + 12.5;
 		PLAYER1_HIT = 0;
 
-		Player_2.top = p2UdpData.playerYpos - 12.5;
-		Player_2.bottom = p2UdpData.playerYpos + 12.5;
-		Player_2.left = p2UdpData.playerXpos - 12.5;
-		Player_2.right = p2UdpData.playerXpos + 12.5;
+		Player_2.top = p2TcpData.playerYpos - 12.5;
+		Player_2.bottom = p2TcpData.playerYpos + 12.5;
+		Player_2.left = p2TcpData.playerXpos - 12.5;
+		Player_2.right = p2TcpData.playerXpos + 12.5;
 		PLAYER2_HIT = 0;
 
 		Laser_Boom = LoadBitmap(g_hInst, MAKEINTRESOURCE(IDB_LASERBOOM));
@@ -158,6 +164,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		SetTimer(hWnd, 0, 10, NULL);
 		SetTimer(hWnd, 1, 100, NULL);
+		SetTimer(hWnd, 2, 1, NULL);
 		playSound(MainSound);
 		break;
 	case WM_LBUTTONDOWN:
@@ -199,56 +206,62 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_TIMER:
 		UpdateData();
-		if (multiStart == 1 && !multiOn)
-		{
-			CreateSocket();
-			multiOn = true;
-			multiStart++;
-		}
-
-		if (multiStart >= 1)
-		{
-			sendTcpData(p1TcpData);
-			p1TcpData = *recvTcpData();
-			//sendUdpData(p1UdpData);
-			//recvUdpData();
-		}
-
 		if (PauseOnOff)
 		{
 			switch (wParam) {
+			case 2:
+				
+			if (multiStart == 1 && !multiOn)
+			{
+				CreateSocket();
+				multiOn = true;
+				multiStart++;
+				p1TcpData.sceneState = MultiReady;
+			}
+
+			if (multiStart >= 1)
+			{
+				
+				sendTcpData(p1TcpData);
+				//sendUdpData(p1UdpData);
+				
+				recvTcpData();
+				//recvUdpData();
+	
+			}
+			break;
 			case 0:
 				PLAYER1DR = STOP;
 
 				if (GetAsyncKeyState('A') < 0)
 				{
-					p1UdpData.playerXpos -= 3;
+					p1TcpData.playerXpos -= 3;
 
-					if (p1UdpData.playerXpos < 12.5)
+					if (p1TcpData.playerXpos < 12.5)
 					{
-						p1UdpData.playerXpos = 12.5;
+						p1TcpData.playerXpos = 12.5;
 					}
 					PLAYER1DR = LEFT;
 				}
 
 				else if (GetAsyncKeyState('D') < 0)
 				{
-					p1UdpData.playerXpos += 3;
+					p1TcpData.playerXpos += 3;
 
-					if (p1UdpData.playerXpos > 1171.5)
+					if (p1TcpData.playerXpos > 1171.5)
 					{
-						p1UdpData.playerXpos = 1171.5;
+						p1TcpData.playerXpos = 1171.5;
 					}
 					PLAYER1DR = RIGHT;
 				}
 
 				if (GetAsyncKeyState('W') < 0)
 				{
-					p1UdpData.playerYpos -= 3;
+					p1TcpData.playerYpos -= 3;
 
-					if (p1UdpData.playerYpos < 12.5)
+					if (p1TcpData.playerYpos < 12.5)
 					{
-						p1UdpData.playerYpos = 12.5;
+						p1TcpData.playerYpos = 12.5;
 					}
 
 					switch (PLAYER1DR)
@@ -267,7 +280,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 				else if (GetAsyncKeyState('S') < 0)
 				{
-					p1UdpData.playerYpos += 3;
+					p1TcpData.playerYpos += 3;
 
 					switch (PLAYER1DR)
 					{
@@ -282,9 +295,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 
-					if (p1UdpData.playerYpos > WindowSize.bottom - 52.5)
+					if (p1TcpData.playerYpos > WindowSize.bottom - 52.5)
 					{
-						p1UdpData.playerYpos = WindowSize.bottom - 52.5;
+						p1TcpData.playerYpos = WindowSize.bottom - 52.5;
 					}
 				}
 
@@ -884,41 +897,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 			if (GetAsyncKeyState('A') < 0)
 			{
-				p1UdpData.playerXpos -= 100;
+				p1TcpData.playerXpos -= 100;
 
-				if (p1UdpData.playerXpos < 12.5)
+				if (p1TcpData.playerXpos < 12.5)
 				{
-					p1UdpData.playerXpos = 12.5;
+					p1TcpData.playerXpos = 12.5;
 				}
 			}
 
 			if (GetAsyncKeyState('W') < 0)
 			{
-				p1UdpData.playerYpos -= 100;
+				p1TcpData.playerYpos -= 100;
 
-				if (p1UdpData.playerYpos < 12.5)
+				if (p1TcpData.playerYpos < 12.5)
 				{
-					p1UdpData.playerYpos = 12.5;
+					p1TcpData.playerYpos = 12.5;
 				}
 			}
 
 			if (GetAsyncKeyState('S') < 0)
 			{
-				p1UdpData.playerYpos += 100;
+				p1TcpData.playerYpos += 100;
 
-				if (p1UdpData.playerYpos > WindowSize.bottom - 52.5)
+				if (p1TcpData.playerYpos > WindowSize.bottom - 52.5)
 				{
-					p1UdpData.playerYpos = 52.5;
+					p1TcpData.playerYpos = 52.5;
 				}
 			}
 
 			if (GetAsyncKeyState('D') < 0)
 			{
-				p1UdpData.playerXpos += 100;
+				p1TcpData.playerXpos += 100;
 
-				if (p1UdpData.playerXpos > 1171.5)
+				if (p1TcpData.playerXpos > 1171.5)
 				{
-					p1UdpData.playerXpos = 1171.5;
+					p1TcpData.playerXpos = 1171.5;
 				}
 			}
 		}
@@ -926,8 +939,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			if (Tp)
 			{
-				p1UdpData.playerXpos = p1TcpData.teleportXpos;
-				p1UdpData.playerYpos = p1TcpData.teleportYpos;
+				p1TcpData.playerXpos = p1TcpData.teleportXpos;
+				p1TcpData.playerYpos = p1TcpData.teleportYpos;
 
 				effPlaySound(teleP);
 				Tp = FALSE;
@@ -935,8 +948,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			else
 			{
-				p1TcpData.teleportXpos = p1UdpData.playerXpos;
-				p1TcpData.teleportYpos = p1UdpData.playerYpos;
+				p1TcpData.teleportXpos = p1TcpData.playerXpos;
+				p1TcpData.teleportYpos = p1TcpData.playerYpos;
 				p1TcpData.useTeleport = false;
 				Tp = TRUE;
 
@@ -1184,21 +1197,21 @@ int sendTcpData(tcpdata playerData)
 
 	// 데이터 통신에 사용할 변수
 	char buf[BUFSIZE];
-	int sendDataSize = sizeof(tcpData);
+int sendDataSize = sizeof(tcpData);
 
-	char data[256];
-	ZeroMemory(data, 256);
+char data[256];
+ZeroMemory(data, 256);
 
-	// 구조체 크기 전송
-	//retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
+// 구조체 크기 전송
+//retval = send(TCPsock, (char *)&sendDataSize, sizeof(int), 0);
 
-	playerData.teleportXpos += 1;
+playerData.teleportXpos += 1;
 
-	retval = send(TCPsock, (char *)&playerData, sizeof(playerData), 0);
+retval = send(TCPsock, (char*)&playerData, sizeof(playerData), 0);
 
 
 
-	return 0;
+return 0;
 }
 
 int sendUdpData(udpdata playerData)
@@ -1220,7 +1233,7 @@ int sendUdpData(udpdata playerData)
 	return 0;
 }
 
-tcpData* recvTcpData()
+void recvTcpData()
 {
 	int retval;
 	int getSize;
@@ -1229,34 +1242,39 @@ tcpData* recvTcpData()
 	getSize = recv(TCPsock, buffer, sizeof(buffer) - 1, 0);
 	buffer[getSize] = '\0';
 
-	tcpdata *tData = (tcpdata*)buffer;
+	tcpdata* tData = (tcpdata*)buffer;
 
-	return tData;
+	p2TcpData = *tData;
 }
 
-udpData* recvUdpData()
+void recvUdpData()
 {
 	int addrlen = sizeof(Userveraddr);
 	int retval;
 	int getSize;
 	char buffer[500];
-	
+
 	getSize = recvfrom(UDPsock, buffer, sizeof(buffer) - 1, 0,
 		(SOCKADDR*)&Userveraddr, &addrlen);
 	buffer[getSize] = '\0';
 
 	udpData* uData = (udpData*)buffer;
 
-	cout << uData->type << endl;
-	return uData;
+	p2UdpData = *uData;
+
+	if (uData->playerID == '1')
+	{
+		int a = 3;
+	}
+
 }
 
 void UpdateData()
 {
-	Player_1.left = p1UdpData.playerXpos - 12.5;
-	Player_1.right = p1UdpData.playerXpos + 12.5;
-	Player_1.top = p1UdpData.playerYpos - 12.5;
-	Player_1.bottom = p1UdpData.playerYpos + 12.5;
+	Player_1.left = p1TcpData.playerXpos - 12.5;
+	Player_1.right = p1TcpData.playerXpos + 12.5;
+	Player_1.top = p1TcpData.playerYpos - 12.5;
+	Player_1.bottom = p1TcpData.playerYpos + 12.5;
 
 	if (Tp)
 	{
@@ -1268,11 +1286,37 @@ void UpdateData()
 
 	p1TcpData.hp = (Energybar.right) * 100 / WindowSize.right;
 
+	//p1TcpData.sceneState = eRound;
 
-	Player_2.left = p2UdpData.playerXpos - 12.5;
-	Player_2.right = p2UdpData.playerXpos + 12.5;
-	Player_2.top = p2UdpData.playerYpos - 12.5;
-	Player_2.bottom = p2UdpData.playerYpos + 12.5;
+	//if (eRound == MultiReady)
+	//{
+	//	if (p1TcpData.sceneState == Select)
+	//	{
+	//		eRound = p1TcpData.sceneState;
+	//		multiSelect = true;
+	//	}
+	//}
+	if(p1TcpData.sceneState == Round1)
+	{
+		int a = 3;
+	}
+	if (multiOn)
+	{
+		if (p1TcpData.sceneState == Round1 && p2TcpData.sceneState == Round1)
+		{
+			eRound = Round1;
+		}
+
+		else if (p1TcpData.sceneState == Round2 && p2TcpData.sceneState == Round2)
+		{
+			eRound = Round2;
+		}
+	}
+
+	Player_2.left = p2TcpData.playerXpos - 12.5;
+	Player_2.right = p2TcpData.playerXpos + 12.5;
+	Player_2.top = p2TcpData.playerYpos - 12.5;
+	Player_2.bottom = p2TcpData.playerYpos + 12.5;
 
 	Energybar2.right = p2TcpData.hp* WindowSize.right / 100;
 }

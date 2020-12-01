@@ -876,24 +876,35 @@ int ClickRange(LPARAM lParam, EROUND& eRound)
 			g_isMulti = false;
 			state = 0;
 			eRound = Select;
+			//p1TcpData.sceneState = Select;
 		}
 		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
 			g_isMulti = true;
 			state = 1;
 			eRound = Select;
+			p1TcpData.sceneState = Select;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
 			eRound = MAIN;
 		break;
 	case Select:
 		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
-			eRound = Round1;
+			if(!g_isMulti)
+				eRound = Round1;
+			else
+				p1TcpData.sceneState = Round1;
 		}
 		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
-			eRound = Round2;
+			if (!g_isMulti)
+				eRound = Round1;
+			else
+				p1TcpData.sceneState = Round2;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
+		{
 			eRound = SelectPlay;
+			p1TcpData.sceneState = SelectPlay;
+		}
 		break;
 	}
 	return state;
