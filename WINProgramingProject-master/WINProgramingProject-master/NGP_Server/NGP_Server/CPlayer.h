@@ -30,6 +30,6 @@ public:
 	void SetDash(bool dash);
 	void SetHP(int hp); 
 
-	EROUND m_state;
+	EROUND m_state=Select;
 };
 

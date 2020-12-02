@@ -24,7 +24,7 @@ extern HANDLE g_hUDPEvent;
 
 extern char g_Id;
 enum EROUND {
-	Round1,
+	Round1=0,
 	MAIN,
 	HELP,
 	Select,
@@ -56,5 +56,6 @@ typedef struct tcpdata
 	int playerYpos;
 	bool useDash;
 	float hp;
+	EROUND sceneState;
 }tcpData;
 #pragma pack()

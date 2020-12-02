@@ -179,13 +179,13 @@ void CUDPsocket::UDPRecvData(int index)
 		postion.x = uData->playerXpos;
 		postion.y = uData->playerYpos;
 		m_pPlayer1->SetPos(postion);
-		m_pPlayer1->m_state = uData->sceneState;
+		//m_pPlayer1->m_state = uData->sceneState;
 		break;
 	case '2':
 		postion.x = uData->playerXpos;
 		postion.y = uData->playerYpos;
 		m_pPlayer2->SetPos(postion);
-		m_pPlayer2->m_state = uData->sceneState;
+		//m_pPlayer2->m_state = uData->sceneState;
 		break;
 	default:
 		break;

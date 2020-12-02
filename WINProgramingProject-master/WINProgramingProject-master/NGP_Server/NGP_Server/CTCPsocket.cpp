@@ -87,6 +87,13 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 	tcpdata tcpData;
 	//ZeroMemory(&tcpData, 0);
 	myPOINT pos;
+
+	if (m_pPlayer1->m_state == EROUND::Round1 && m_pPlayer2->m_state == EROUND::Select)
+		m_pPlayer2->m_state = EROUND::Round1;
+	else if (m_pPlayer2->m_state == EROUND::Round1 && m_pPlayer1->m_state == EROUND::Select)
+		m_pPlayer1->m_state = EROUND::Round1;
+
+
 	switch (index)
 	{
 	case 1:
@@ -101,6 +108,7 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 		pos = m_pPlayer2->Getpos();
 		tcpData.playerXpos = pos.x;
 		tcpData.playerYpos = pos.y;
+		tcpData.sceneState = m_pPlayer1->m_state;
 		break;
 	case 2:
 		tcpData.type = 't';
@@ -114,6 +122,7 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 		pos = m_pPlayer1->Getpos();
 		tcpData.playerXpos = pos.x;
 		tcpData.playerYpos = pos.y;
+		tcpData.sceneState = m_pPlayer2->m_state;
 		break;
 
 	default:
@@ -129,7 +138,7 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 		return;
 	}
 
-
+	cout << "player1: " << m_pPlayer1->m_state << "player2: " << m_pPlayer2->m_state << '\r';
 
 }
 
@@ -161,6 +170,7 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 		telPos.y = tcpData->playerYpos;
 		m_pPlayer1->SetPos(telPos);
 		m_pPlayer1->SetHP(tcpData->hp);
+		m_pPlayer1->m_state =(EROUND)tcpData->sceneState;
 		break;
 	case 2:
 		m_pPlayer2->SetUseTeleport(tcpData->useTeleport);
@@ -171,10 +181,16 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 		telPos.y = tcpData->playerYpos;
 		m_pPlayer2->SetPos(telPos);
 		m_pPlayer2->SetHP(tcpData->hp);
+		m_pPlayer2->m_state = (EROUND)tcpData->sceneState;
 		break;
 	default:
 		break;
 	}
+
+
+	//cout << "player1: " << m_pPlayer1->m_state  << "player2: " << m_pPlayer2->m_state << '\r';
+
+
 }
 
 

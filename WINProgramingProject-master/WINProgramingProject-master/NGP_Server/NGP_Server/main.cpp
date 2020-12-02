@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
 {
 	//이벤트 생성
 	//player1
+	player1.m_state = EROUND::Select;
+	player2.m_state = EROUND::Select;
 	g_hTCPSendEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (g_hTCPSendEvent == NULL) return 1;
 
@@ -132,21 +134,21 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 
 
-		cout << "-------------------------\n";
-		cout << "              " << index << ' ' << g_clientCnt << '\n';
-		cout << "-------------------------\n";
+		//cout << "-------------------------\n";
+		//cout << "              " << index << ' ' << g_clientCnt << '\n';
+		//cout << "-------------------------\n";
 
 
 		//retval = WaitForSingleObject(g_hUDPEvent, INFINITE);
 
 
-		cout << "tcprecv데이터 받기 한다." << endl;
+		//cout << "tcprecv데이터 받기 한다." << endl;
 		tcpSocket->TcpRecvData(index, client_sock);
-		cout << "tcprecv데이터 받기 완료." << endl;
+		//cout << "tcprecv데이터 받기 완료." << endl;
 
-		cout << "tcprecv데이터 보내기 한다." << endl;
+		//cout << "tcprecv데이터 보내기 한다." << endl;
 		tcpSocket->TcpSendData(index, client_sock);
-		cout << "tcprecv데이터 보내기 완료." << endl;
+		//cout << "tcprecv데이터 보내기 완료." << endl;
 
 
 

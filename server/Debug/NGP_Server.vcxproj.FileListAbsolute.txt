@@ -1,0 +1,2 @@
+C:\Users\SuperHong\source\repos\GitHub\NGP\server\Debug\NGP_Server.exe
+C:\Users\SuperHong\source\repos\GitHub\NGP\server\Debug\NGP_Server.pdb
