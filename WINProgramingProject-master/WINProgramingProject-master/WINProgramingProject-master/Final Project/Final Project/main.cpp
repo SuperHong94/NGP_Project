@@ -12,8 +12,8 @@ using namespace std;
 //#define SERVERIP "192.168.219.100"
 //#define SERVERIP "192.168.219.103"
 //#define SERVERIP "192.168.43.181"
-#define SERVERIP "192.168.43.167"
-//#define SERVERIP "192.168.219.102"
+//#define SERVERIP "192.168.43.167"
+#define SERVERIP "192.168.219.102"
 //#define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
 #define BUFSIZE 5000
@@ -79,11 +79,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
 	//int cnt = 0
 	//	1
 	p1UdpData = { 'u', '1' };
-	p1TcpData = { 't', '1' , false, 0, 0,390,390,false, 100 , EROUND::SelectPlay };
+	p1TcpData = { 't', '1' , false, 0, 0,390,390,false, 100 ,5,5, EROUND::MAIN };
 
 
 	p2UdpData = { 'u', '2'};
-	p2TcpData = { 't', '2' , false, 0, 0,390,390,false, 100 ,  EROUND::MAIN };
+	p2TcpData = { 't', '2' , false, 0, 0,390,390,false, 100 ,5,5,  EROUND::MAIN };
 
 	char type;
 	char playerID;
@@ -184,21 +184,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			ClickRange(lParam, eRound);
 			break;
 		case Round1:
+			cout << "a" << endl;
 			break;
 		case Round2:
 			break;
 		case YouDie:
 			Energybar.right = WindowSize.right;
 			Energybar2.right = WindowSize.right;
+			p1TcpData.sceneState = MAIN;
 			playSound(MainSound);
 			eRound = MAIN;
-
+			// closesocket()
+			closesocket(TCPsock);
+			// 윈속 종료
+			WSACleanup();
 			break;
 		case YouWin:
 			eRound = MAIN;
 			Energybar.right = WindowSize.right;
 			Energybar2.right = WindowSize.right;
+			p1TcpData.sceneState = MAIN;
 			playSound(MainSound);
+			// closesocket()
+			closesocket(TCPsock);
+			// 윈속 종료
+			WSACleanup();
 			break;
 		default:
 			break;
@@ -400,10 +410,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 					SetUp(head, bullet_head);
 		
 				}
-				if (Energybar.right <= 0) {
-					eRound = YouDie;
+				if (Energybar2.right <= 0) {
+					eRound = YouWin;
 					KillTimer(hWnd, 1);
-					playSound(YOUDIE);
+					playSound(YOUWIN);
 					menuOnOff = true;
 					SetUp(head, bullet_head);
 				}
@@ -890,8 +900,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		InvalidateRect(hWnd, NULL, FALSE);
 		break;
 	case WM_KEYDOWN:
-		if (wParam == 'E')
+		if (wParam == 'E' && p2TcpData.DashCnt>0)
 		{
+			Energybar.right -= 50;
+			p1TcpData.useDash = true;
 			effPlaySound(jump);
 			p1TcpData.useDash = true;
 
@@ -937,7 +949,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		else if (wParam == 'R')
 		{
-			if (Tp)
+			if (Tp && p2TcpData.telCnt > 0)
 			{
 				p1TcpData.playerXpos = p1TcpData.teleportXpos;
 				p1TcpData.playerYpos = p1TcpData.teleportYpos;
@@ -945,8 +957,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				effPlaySound(teleP);
 				Tp = FALSE;
 				p1TcpData.useTeleport = true;
+				Energybar.right -= 50;
 			}
-			else
+			else if(!Tp && p2TcpData.telCnt > 0)
 			{
 				p1TcpData.teleportXpos = p1TcpData.playerXpos;
 				p1TcpData.teleportYpos = p1TcpData.playerYpos;
@@ -1209,7 +1222,8 @@ playerData.teleportXpos += 1;
 
 retval = send(TCPsock, (char*)&playerData, sizeof(playerData), 0);
 
-
+p1TcpData.useDash = false;
+p1TcpData.useTeleport = false;
 
 return 0;
 }
@@ -1300,17 +1314,15 @@ void UpdateData()
 	{
 		int a = 3;
 	}
-	if (multiOn)
-	{
-		if (p1TcpData.sceneState == Round1 && p2TcpData.sceneState == Round1)
-		{
-			eRound = Round1;
-		}
 
-		else if (p1TcpData.sceneState == Round2 && p2TcpData.sceneState == Round2)
-		{
-			eRound = Round2;
-		}
+	if (p2TcpData.sceneState == Round1)
+	{
+		eRound = Round1;
+	}
+
+	else if (p2TcpData.sceneState == Round2)
+	{
+		eRound = Round2;
 	}
 
 	Player_2.left = p2TcpData.playerXpos - 12.5;
@@ -1319,4 +1331,15 @@ void UpdateData()
 	Player_2.bottom = p2TcpData.playerYpos + 12.5;
 
 	Energybar2.right = p2TcpData.hp* WindowSize.right / 100;
+
+	if (p1TcpData.hp < 0)
+	{
+		p1TcpData.sceneState = YouDie;
+		eRound = YouDie;
+	}
+	else if (p2TcpData.hp < 0)
+	{
+		p1TcpData.sceneState = YouWin;
+		eRound = YouWin;
+	}
 }

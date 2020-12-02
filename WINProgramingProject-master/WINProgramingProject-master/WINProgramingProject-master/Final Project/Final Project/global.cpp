@@ -849,6 +849,7 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 		DeleteDC(mDC);
 		return 0;
 	case Round1:
+	
 		return 1;
 	case Round2:
 		return 2;
@@ -888,8 +889,14 @@ int ClickRange(LPARAM lParam, EROUND& eRound)
 			eRound = MAIN;
 		break;
 	case Select:
+		//if (p1TcpData.sceneState == Round1 && p2TcpData.sceneState == Round1)
+		//	eRound = Round1;
+
+		//else if (p1TcpData.sceneState == Round2 && p2TcpData.sceneState == Round2)
+		//	eRound = Round2;
+
 		if ((x >= 80 && y >= 100) && (x <= 1110 && y <= 260)) {
-			if(!g_isMulti)
+			if (!g_isMulti)
 				eRound = Round1;
 			else
 				p1TcpData.sceneState = Round1;

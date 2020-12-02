@@ -71,6 +71,8 @@ typedef struct tcpdata
 	int playerYpos;
 	bool useDash;
 	float hp;
+	int telCnt;
+	int DashCnt;
 	EROUND sceneState;
 }tcpData;
 #pragma pack()
