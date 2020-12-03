@@ -174,6 +174,8 @@ void DrawEnergybar2(HDC hDC, HINSTANCE hInstance, EROUND&);
 void CheckBulletCrush(Boom* head);
 void CheckBoomCrush(Boom* head);
 int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst);
+int DrawTelCnt(HDC hDC, EROUND& eRound, HINSTANCE hInst);
+
 int ClickRange(LPARAM, EROUND&);
 void MeetBoom(HDC, Boom*);
 void SetUp(Boom* head, Boom* bullet_head);

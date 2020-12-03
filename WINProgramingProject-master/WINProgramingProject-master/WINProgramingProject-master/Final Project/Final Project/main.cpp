@@ -118,6 +118,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	static Boom* bullet_head;
 	static int syc = 0;
 
+	char buffer[1000]; //초세는 타이머
+	HFONT hFont;
+	HBITMAP hBit1;
+	BITMAP bit;
+
 	//int boomCount = 0;  //폭탄 카운트는 0;
 
 	//메시지 처리하기
@@ -611,6 +616,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						menuOnOff = true;
 						break;
 					}
+			
 					break;
 				case Round2:
 					switch (sj_Timer + syc)
@@ -1075,6 +1081,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		BackBit = CreateCompatibleBitmap(MemDC, WindowSize.right, WindowSize.bottom);
 		oldBackBit = (HBITMAP)SelectObject(hDC, BackBit);
 		PatBlt(hDC, 0, 0, WindowSize.right, WindowSize.bottom, BLACKNESS);
+
+		DrawTelCnt(hDC, eRound, g_hInst);
+
 		if (menuOnOff) {
 			switch (DrawMenu(hDC, eRound, g_hInst))
 			{
@@ -1341,5 +1350,6 @@ void UpdateData()
 	{
 		p1TcpData.sceneState = YouWin;
 		eRound = YouWin;
+		score = sj_Timer * Energybar.right;
 	}
 }

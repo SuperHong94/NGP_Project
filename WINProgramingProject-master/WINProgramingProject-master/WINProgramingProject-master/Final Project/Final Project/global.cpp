@@ -846,13 +846,49 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 		sprintf(buffer, "점수: %d", score);
 		TextOutA(hDC, 600, 0, buffer, strlen(buffer));
 		DeleteObject(hFont);
-		DeleteDC(mDC);
+
 		return 0;
 	case Round1:
-	
+
 		return 1;
 	case Round2:
 		return 2;
+	default:
+		break;
+	}
+}
+
+
+int DrawTelCnt(HDC hDC, EROUND& eRound, HINSTANCE hInst)
+{
+	char buffer[1000]; //초세는 타이머
+	HFONT hFont;
+	HBITMAP hBit;
+	BITMAP bit;
+
+	switch (eRound)
+	{
+	case Round1:
+		hFont = CreateFont(50, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, L"궁서체");
+		(HFONT)SelectObject(hDC, hFont);
+		SetTextColor(hDC, RGB(255, 255, 255));
+		SetBkColor(hDC, RGB(0, 0, 0));
+		sprintf(buffer, "teleport: %d   dash: %d", p2TcpData.telCnt, p2TcpData.DashCnt);
+		TextOutA(hDC, 600, 0, buffer, strlen(buffer));
+		DeleteObject(hFont);
+
+
+		return 0;
+	case Round2:
+		hFont = CreateFont(50, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, L"궁서체");
+		(HFONT)SelectObject(hDC, hFont);
+		SetTextColor(hDC, RGB(255, 255, 255));
+		SetBkColor(hDC, RGB(0, 0, 0));
+		sprintf(buffer, "teleport: %d   dash: %d", p2TcpData.telCnt, p2TcpData.DashCnt);
+		TextOutA(hDC, 600, 0, buffer, strlen(buffer));
+		DeleteObject(hFont);
+
+		return 0;
 	default:
 		break;
 	}
