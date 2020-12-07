@@ -29,7 +29,7 @@ public:
 	void SetTelePos(myPOINT pos);
 	void SetDash(bool dash);
 	void SetHP(int hp); 
-
+	void Init();
 	EROUND m_state;
 };
 

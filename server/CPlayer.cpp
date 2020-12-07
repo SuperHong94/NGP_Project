@@ -67,3 +67,13 @@ void CPlayer::SetHP(int hp)
 {
     m_hp = hp;
 }
+
+void CPlayer::Init()
+{
+    m_pos.x = 0; m_pos.y = 0;
+    m_useTeleport = false;
+    m_telePos.x = 0; m_telePos.y = 0;
+    m_useDash = false;
+    m_hp = 100.f;
+    m_state = EROUND::MAIN;
+}

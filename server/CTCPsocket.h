@@ -26,9 +26,9 @@ public:
 	SOCKADDR_IN GetClientaddr();
 
 	SOCKET TCPAccept();
-	void TcpSendData(int index, SOCKET socket);
+	int TcpSendData(int index, SOCKET socket);
 
-	void TcpRecvData(int index, SOCKET socket);
+	int TcpRecvData(int index, SOCKET socket);
 
 	CPlayer* m_pPlayer1;
 	CPlayer* m_pPlayer2;

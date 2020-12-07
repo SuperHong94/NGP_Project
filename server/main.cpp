@@ -70,14 +70,16 @@ int main(int argc, char* argv[])
 		// 스레드 생성
 		hThread = CreateThread(NULL, 0, ProcessClient, (LPVOID)&tcpSocket, 0, NULL);
 
-		/*if (hThread == NULL)
+		if (hThread == NULL)
 		{
 			closesocket(client_sock);
 		}
 		else
 		{
+			
 			CloseHandle(hThread);
-		}*/
+			
+		}
 
 		
 
@@ -107,6 +109,9 @@ DWORD WINAPI UdpClient(LPVOID arg)
 }
 DWORD WINAPI ProcessClient(LPVOID arg)
 {
+
+	g_DashCnt = 5;
+	g_TelCnt = 5;
 	g_clientCnt++;
 	//cout << g_clientCnt << "접속 완료" << endl;
 	int index = g_clientCnt;
@@ -117,6 +122,9 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 	int retval = 0;
 	//클라이언트 정보 얻기
 	getpeername(client_sock, (SOCKADDR*)&clientaddr, &addrlen);
+
+	tcpSocket->m_pPlayer1->Init();
+	tcpSocket->m_pPlayer2->Init();
 	while (1) {
 
 
@@ -131,36 +139,27 @@ DWORD WINAPI ProcessClient(LPVOID arg)
 
 
 		//cout << "tcprecv데이터 받기 한다." << endl;
-		tcpSocket->TcpRecvData(index, client_sock);
+		if (tcpSocket->TcpRecvData(index, client_sock) == 0)
+			break;
 		//cout << "tcprecv데이터 받기 완료." << endl;
 
 		//cout << "tcprecv데이터 보내기 한다." << endl;
-		tcpSocket->TcpSendData(index, client_sock);
+
+		if (tcpSocket->TcpSendData(index, client_sock) == 0)
+			break;
 		//cout << "tcprecv데이터 보내기 완료." << endl;
 
-		cout << g_DashCnt <<" " << g_TelCnt << '\r';
+		cout <<g_clientCnt<<" " << g_DashCnt <<" " << g_TelCnt << '\r';
 		
 
 
-		//cout << "udp데이터 받기" << endl;
-		//udpSocket.UDPRecvData(index);
-		//cout << "udp데이터 받기 완료" << endl;
-		//
+	
 
-		//cout << "udp보내기\n	";
-		//udpSocket.UDPSendData(index);
-		//cout << "udp보내기완료\n	";
-
-		//retval = WaitForSingleObject(g_hUDPEvent, INFINITE);
-		
-		//ResetEvent(g_hUDPEvent);
-		//SetEvent(g_hTCPRecvEvent);
-
-		/*ResetEvent(g_hTCPRecvEvent);
-		SetEvent(g_hTCPSendEvent);*/
 	}
-
+	//
 	// closesocket()
+
+	g_clientCnt = 0;
 	closesocket(tcpSocket->GetClientSock());
 	printf("\n[TCP 서버] 클라이언트 종료: IP 주소=%s, 포트 번호=%d\n",
 		inet_ntoa(tcpSocket->GetClientaddr().sin_addr), ntohs(tcpSocket->GetClientaddr().sin_port));

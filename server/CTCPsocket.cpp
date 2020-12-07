@@ -81,7 +81,7 @@ SOCKET CTCPsocket::TCPAccept()
 	return m_client_sock;
 }
 
-void CTCPsocket::TcpSendData(int index, SOCKET sock)
+int CTCPsocket::TcpSendData(int index, SOCKET sock)
 {
 	//Player 1에게는 Player 2정보를 보낸다.
 	tcpdata tcpData;
@@ -149,14 +149,15 @@ void CTCPsocket::TcpSendData(int index, SOCKET sock)
 	//std::cout << "보내야 되는 데이터량: " << size << " 보낸 데이터량" << retval << ' ' << tcpData.playerID << "의 telX:" << tcpData.teleportXpos << "를 보냅니다.\n";
 	if (retval == SOCKET_ERROR) {
 		err_display("sendtcp()");
-		return;
+		g_clientCnt = 0;
+		return 0;
 	}
 
 	//cout << "player1: " << m_pPlayer1->m_state << "player2: " << m_pPlayer2->m_state << '\r';
-
+	return 1;
 }
 
-void CTCPsocket::TcpRecvData(int index, SOCKET sock)
+int CTCPsocket::TcpRecvData(int index, SOCKET sock)
 {
 
 	tcpdata* tcpData;
@@ -167,12 +168,17 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 	//cout << "데이터를 받습니다.\n";
 
 	int retval = recv(sock, buffer, 512 - 1, 0);
+	if (retval == SOCKET_ERROR) {
+		err_display("recv()");
+		g_clientCnt = 0;
+		return 0;
+	}
 	//index가 1이면 플레이어1이 보낸정보이다.
 	buffer[retval] = '\0';
 
 	tcpData = (tcpdata*)buffer;
 
-	//std::cout << "받은데이터량:  " << retval << ' ' << tcpData->playerID << "에서 받은 데이터: " << tcpData->teleportXpos << endl;
+	
 	switch (index)
 	{
 	case 1:
@@ -214,7 +220,7 @@ void CTCPsocket::TcpRecvData(int index, SOCKET sock)
 	LeaveCriticalSection(&g_cs);
 	//cout << "player1: " << m_pPlayer1->m_state  << "player2: " << m_pPlayer2->m_state << '\r';
 
-
+	return 1;
 }
 
 
