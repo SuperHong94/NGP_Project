@@ -846,7 +846,7 @@ int DrawMenu(HDC hDC, EROUND& eRound, HINSTANCE hInst)
 		sprintf(buffer, "Á¡¼ö: %d", score);
 		TextOutA(hDC, 600, 0, buffer, strlen(buffer));
 		DeleteObject(hFont);
-
+		DeleteDC(mDC);
 		return 0;
 	case Round1:
 
@@ -902,9 +902,15 @@ int ClickRange(LPARAM lParam, EROUND& eRound)
 	switch (eRound) {
 	case MAIN:
 		if ((x >= 190 && y >= 250) && (x <= 1000 && y <= 370))
+		{
 			eRound = SelectPlay;
+			p1TcpData.sceneState = SelectPlay;
+		}
 		if ((x >= 190 && y >= 400) && (x <= 1000 && y <= 525))
+		{
 			eRound = HELP;
+			p1TcpData.sceneState = HELP;
+		}
 		if ((x >= 190 && y >= 555) && (x <= 1000 && y <= 680))
 			PostQuitMessage(0);
 		break;
@@ -914,15 +920,19 @@ int ClickRange(LPARAM lParam, EROUND& eRound)
 			state = 0;
 			eRound = Select;
 			//p1TcpData.sceneState = Select;
+			//p1TcpData.sceneState = Select;
 		}
 		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
 			g_isMulti = true;
 			state = 1;
 			eRound = Select;
-			p1TcpData.sceneState = Select;
+			//p1TcpData.sceneState = Select;
 		}
 		if ((x >= 190 && y >= 500) && (x <= 1110 && y <= 660))
+		{
 			eRound = MAIN;
+			p1TcpData.sceneState = MAIN;
+		}
 		break;
 	case Select:
 		//if (p1TcpData.sceneState == Round1 && p2TcpData.sceneState == Round1)
@@ -939,7 +949,7 @@ int ClickRange(LPARAM lParam, EROUND& eRound)
 		}
 		if ((x >= 190 && y >= 300) && (x <= 1110 && y <= 460)) {
 			if (!g_isMulti)
-				eRound = Round1;
+				eRound = Round2;
 			else
 				p1TcpData.sceneState = Round2;
 		}

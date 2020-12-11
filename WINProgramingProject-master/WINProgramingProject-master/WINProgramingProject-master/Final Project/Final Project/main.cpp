@@ -13,7 +13,7 @@ using namespace std;
 //#define SERVERIP "192.168.219.103"
 //#define SERVERIP "192.168.43.181"
 //#define SERVERIP "192.168.43.167"
-#define SERVERIP "192.168.219.102"
+#define SERVERIP "192.168.43.181"
 //#define SERVERIP "127.0.0.1"
 #define SERVERPORT 9000
 #define BUFSIZE 5000
@@ -199,21 +199,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			p1TcpData.sceneState = MAIN;
 			playSound(MainSound);
 			eRound = MAIN;
+	
+			multiOn = false;
+			multiStart = 0;
+			p2TcpData.hp = 100;
+
 			// closesocket()
 			closesocket(TCPsock);
 			// 윈속 종료
 			WSACleanup();
+
 			break;
 		case YouWin:
-			eRound = MAIN;
 			Energybar.right = WindowSize.right;
 			Energybar2.right = WindowSize.right;
 			p1TcpData.sceneState = MAIN;
 			playSound(MainSound);
+			eRound = MAIN;
+
+			multiOn = false;
+			multiStart = 0;
+			p2TcpData.hp = 100;
+
 			// closesocket()
 			closesocket(TCPsock);
 			// 윈속 종료
 			WSACleanup();
+
 			break;
 		default:
 			break;
@@ -231,10 +243,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				CreateSocket();
 				multiOn = true;
 				multiStart++;
+
+				p1TcpData = { 't', '1' , false, 0, 0,390,390,false, 100 ,5,5, EROUND::MAIN };
+				p2TcpData = { 't', '2' , false, 0, 0,390,390,false, 100 ,5,5,  EROUND::MAIN };
+
 				p1TcpData.sceneState = MultiReady;
 			}
 
-			if (multiStart >= 1)
+			if (multiStart >= 1 && multiOn)
 			{
 				
 				sendTcpData(p1TcpData);
@@ -611,6 +627,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case 500://승리조건
 						eRound = YouWin;
+						p1TcpData.sceneState = YouWin;
 						score = sj_Timer * Energybar.right;
 						playSound(YOUWIN);
 						menuOnOff = true;
@@ -892,6 +909,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 					case 755:  //승리조건
 						eRound = YouWin;
+						p1TcpData.sceneState = YouWin;
 						score = sj_Timer * Energybar.right;
 						playSound(YOUWIN);
 						menuOnOff = true;
@@ -1230,9 +1248,15 @@ ZeroMemory(data, 256);
 playerData.teleportXpos += 1;
 
 retval = send(TCPsock, (char*)&playerData, sizeof(playerData), 0);
+if (retval == SOCKET_ERROR)
+{
+	return 0;
+}
+
 
 p1TcpData.useDash = false;
 p1TcpData.useTeleport = false;
+
 
 return 0;
 }
@@ -1263,6 +1287,11 @@ void recvTcpData()
 	char buffer[500];
 
 	getSize = recv(TCPsock, buffer, sizeof(buffer) - 1, 0);
+	if (getSize == SOCKET_ERROR)
+	{
+		return;
+	}
+
 	buffer[getSize] = '\0';
 
 	tcpdata* tData = (tcpdata*)buffer;
@@ -1294,62 +1323,67 @@ void recvUdpData()
 
 void UpdateData()
 {
-	Player_1.left = p1TcpData.playerXpos - 12.5;
-	Player_1.right = p1TcpData.playerXpos + 12.5;
-	Player_1.top = p1TcpData.playerYpos - 12.5;
-	Player_1.bottom = p1TcpData.playerYpos + 12.5;
-
-	if (Tp)
+	if (multiStart >= 1 && multiOn)
 	{
-		tmp.bottom = p1TcpData.teleportYpos + 12.5;
-		tmp.left = p1TcpData.teleportXpos - 12.5;
-		tmp.right = p1TcpData.teleportXpos + 12.5;
-		tmp.top = p1TcpData.teleportYpos - 12.5;
-	}
+		Player_1.left = p1TcpData.playerXpos - 12.5;
+		Player_1.right = p1TcpData.playerXpos + 12.5;
+		Player_1.top = p1TcpData.playerYpos - 12.5;
+		Player_1.bottom = p1TcpData.playerYpos + 12.5;
 
-	p1TcpData.hp = (Energybar.right) * 100 / WindowSize.right;
+		if (Tp)
+		{
+			tmp.bottom = p1TcpData.teleportYpos + 12.5;
+			tmp.left = p1TcpData.teleportXpos - 12.5;
+			tmp.right = p1TcpData.teleportXpos + 12.5;
+			tmp.top = p1TcpData.teleportYpos - 12.5;
+		}
 
-	//p1TcpData.sceneState = eRound;
+		p1TcpData.hp = (Energybar.right) * 100 / WindowSize.right;
 
-	//if (eRound == MultiReady)
-	//{
-	//	if (p1TcpData.sceneState == Select)
-	//	{
-	//		eRound = p1TcpData.sceneState;
-	//		multiSelect = true;
-	//	}
-	//}
-	if(p1TcpData.sceneState == Round1)
-	{
-		int a = 3;
-	}
+		//p1TcpData.sceneState = eRound;
 
-	if (p2TcpData.sceneState == Round1)
-	{
-		eRound = Round1;
-	}
+		//if (eRound == MultiReady)
+		//{
+		//	if (p1TcpData.sceneState == Select)
+		//	{
+		//		eRound = p1TcpData.sceneState;
+		//		multiSelect = true;
+		//	}
+		//}
+		if (p1TcpData.sceneState == Round1)
+		{
+			int a = 3;
+		}
 
-	else if (p2TcpData.sceneState == Round2)
-	{
-		eRound = Round2;
-	}
+		if (p2TcpData.sceneState == Round1)
+		{
+			eRound = Round1;
+		}
 
-	Player_2.left = p2TcpData.playerXpos - 12.5;
-	Player_2.right = p2TcpData.playerXpos + 12.5;
-	Player_2.top = p2TcpData.playerYpos - 12.5;
-	Player_2.bottom = p2TcpData.playerYpos + 12.5;
+		else if (p2TcpData.sceneState == Round2)
+		{
+			eRound = Round2;
+		}
 
-	Energybar2.right = p2TcpData.hp* WindowSize.right / 100;
+		Player_2.left = p2TcpData.playerXpos - 12.5;
+		Player_2.right = p2TcpData.playerXpos + 12.5;
+		Player_2.top = p2TcpData.playerYpos - 12.5;
+		Player_2.bottom = p2TcpData.playerYpos + 12.5;
 
-	if (p1TcpData.hp < 0)
-	{
-		p1TcpData.sceneState = YouDie;
-		eRound = YouDie;
-	}
-	else if (p2TcpData.hp < 0)
-	{
-		p1TcpData.sceneState = YouWin;
-		eRound = YouWin;
-		score = sj_Timer * Energybar.right;
+		Energybar2.right = p2TcpData.hp * WindowSize.right / 100;
+
+		if (p1TcpData.hp < 0)
+		{
+			p1TcpData.sceneState = YouDie;
+			eRound = YouDie;
+			p2TcpData.hp = 100;
+		}
+		else if (p2TcpData.hp < 0)
+		{
+			p1TcpData.sceneState = YouWin;
+			eRound = YouWin;
+			score = sj_Timer * Energybar.right;
+			p2TcpData.hp = 100;
+		}
 	}
 }
