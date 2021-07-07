@@ -1,5 +1,0 @@
-STAGE0 == 메뉴노래
-STAGE1 ==페리온
-STAGE2 ==해성이 노래
-STAGE3 == YOUDIE
-STAGE4 ==YOUWIN

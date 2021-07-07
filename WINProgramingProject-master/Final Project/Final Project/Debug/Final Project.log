@@ -1,0 +1,100 @@
+﻿  global.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(454,7): warning C4101: 'hPen' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(454,13): warning C4101: 'oldPen' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(491,7): warning C4101: 'hPen' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(491,13): warning C4101: 'oldPen' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(701,9): warning C4101: 'bit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(702,10): warning C4101: 'hBit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(700,6): warning C4101: 'mDC' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(724,9): warning C4101: 'bit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(725,10): warning C4101: 'hBit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(723,6): warning C4101: 'mDC' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(846,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(876,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(887,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(867,9): warning C4101: 'bit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(866,10): warning C4101: 'hBit' :참조되지 않은 지역 변수입니다.
+  main.cpp
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(85,7): warning C4101: 'type' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(86,7): warning C4101: 'playerID' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(91,6): warning C4101: 'hp' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(90,7): warning C4101: 'useDash' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(88,6): warning C4101: 'teleportXpos' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(89,6): warning C4101: 'teleportYpos' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(87,7): warning C4101: 'useTeleport' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(142,39): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(143,42): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(144,40): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(145,41): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(148,39): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(149,42): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(150,40): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(151,41): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(267,30): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(278,30): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(289,30): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(325,48): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(846,86): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(846,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(850,87): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(850,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(853,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(853,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(857,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(857,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(860,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(860,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(864,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(864,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(867,86): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(867,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(871,87): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(871,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(874,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(874,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(877,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(877,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(880,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(880,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(883,88): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(883,40): warning C4244: '인수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(936,29): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(946,29): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(956,29): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(966,29): warning C4244: '=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(120,10): warning C4101: 'hBit1' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(119,8): warning C4101: 'hFont' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(121,9): warning C4101: 'bit' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(118,7): warning C4101: 'buffer' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1172,2): warning C4996: 'mbstowcs': This function or variable may be unsafe. Consider using mbstowcs_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1189,9): warning C4477: 'printf' : 서식 문자열 '%s'에 'char *' 형식의 인수가 필요하지만 variadic 인수 2의 형식이 'LPCTSTR'입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1189,9): message : 서식 문자열에서 '%ls'을(를) 사용하는 것이 좋습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1189,9): message : 서식 문자열에서 '%lls'을(를) 사용하는 것이 좋습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1189,9): message : 서식 문자열에서 '%Ls'을(를) 사용하는 것이 좋습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1189,9): message : 서식 문자열에서 '%ws'을(를) 사용하는 것이 좋습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1214,37): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1219,37): warning C4996: 'inet_addr': Use inet_pton() or InetPton() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1235,7): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1261,7): warning C4101: 'buf' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1280,6): warning C4101: 'retval' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1298,6): warning C4101: 'retval' :참조되지 않은 지역 변수입니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1321,40): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1322,41): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1323,39): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1324,42): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1328,40): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1329,38): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1330,39): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1331,37): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1334,42): warning C4244: '=': 'LONG'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1361,40): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1362,41): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1363,39): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1364,42): warning C4244: '=': 'double'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1366,54): warning C4244: '=': 'float'에서 'LONG'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1172): warning C4700: 초기화되지 않은 'w_str' 지역 변수를 사용했습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\main.cpp(1225): warning C4715: 'CreateSocket': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(895): warning C4715: 'DrawTelCnt': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Final Project\global.cpp(859): warning C4715: 'DrawMenu': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  Final Project.vcxproj -> C:\Users\SuperHong\source\repos\GitHub\NGP\WINProgramingProject-master\Final Project\Debug\Final Project.exe
